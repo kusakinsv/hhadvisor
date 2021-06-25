@@ -15,17 +15,23 @@ public class VacancyParser {
     private static final String mainurl = "https://api.hh.ru/vacancies";
 
     public List<Vacancy> doParse(String name, int counter) {
-        counter = 580;
+        counter = 587;
         Integer maxCount = 20;
         Integer count = 5;
         if (count > 20) count = maxCount;
-
-
+        Integer ostatok = counter%20;
+        int scanPages = counter-ostatok;
+        System.out.println(ostatok);
+//        for (int i = 0; i < ; i++) {
+//
+//        }
 
         String url = mainurl + "?per_page=" + count + "&page=" + 0 + "&text=" + name;
         System.out.println(url);
         List<Vacancy> parsedlist = new ArrayList<>();
         Models responseE = restTemplate.getForObject(url, Models.class);
+        Integer found = responseE.getFound();
+        System.out.println("Найдено: " + found);
         for (int i = 0; i < 4; i++) {
             parsedlist.add(new Vacancy(i,
                     responseE.getItems().get(i).getName(),
