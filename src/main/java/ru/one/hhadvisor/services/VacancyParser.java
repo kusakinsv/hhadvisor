@@ -31,7 +31,7 @@ public class VacancyParser {
         List<Vacancy> parsedlist = new ArrayList<>();
         Models responseE = restTemplate.getForObject(url, Models.class);
         Integer found = responseE.getFound();
-        System.out.println("Найдено: " + found);
+        System.out.println("Found: " + found);
         for (int i = 0; i < 4; i++) {
             parsedlist.add(new Vacancy(i,
                     responseE.getItems().get(i).getName(),
