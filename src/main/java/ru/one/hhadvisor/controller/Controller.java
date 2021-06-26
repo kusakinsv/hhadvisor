@@ -71,12 +71,6 @@ public class Controller {
 
 
 
-    //    public List<Vacancy> getParams(String url) {
-//        VacancyParser parser = new VacancyParser();
-//        return parser.doParse(url);
-//    }
-
-
 //    @GetMapping
 //    public String searchParams(@RequestParam(value = "name", required = false) String name,
 //                            @RequestParam(value = "per_page", required = false) Integer perPage,
