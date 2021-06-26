@@ -57,15 +57,15 @@ public class Controller {
 
     @GetMapping
     public List<Vacancy> searchParams(@RequestParam(value = "name", required = false) String name,
-                               @RequestParam(value = "per_page", required = false) Integer perPage,
-                               @RequestParam(value = "page", required = false) String page
+                              // @RequestParam(value = "per_page", required = false) Integer perPage,
+                               @RequestParam(value = "count", required = false) Integer count
     ) {
-        System.out.println(name + perPage + page);
+        System.out.println("Text:" + name + " || Count:" + count);
         String queryUrl = "";
-        queryUrl = hhurl + "?per_page=" + perPage + "&page=" + page + "&text=" + name;
+       // queryUrl = hhurl + "?per_page=" + 20 + "&page=0" + page + "&text=" + name;
         VacancyParser parser = new VacancyParser();
         System.out.println(queryUrl);
-        return parser.doParse("Java", 50);
+        return parser.doParse(name, count);
     }
 
     //    public List<Vacancy> getParams(String url) {
