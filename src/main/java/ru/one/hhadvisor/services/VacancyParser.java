@@ -42,7 +42,7 @@ public class VacancyParser {
         for (int j = 0; j <= countpages; j++) {
 
             if (counterIDs > 2000) break;
-            pagesCount++;
+            pagesCount = j;
             url = mainurl + "?per_page=" + 20 + "&page=" + j + "&text=" + name;
             Models responseE = restTemplate.getForObject(url, Models.class);
             Integer found = responseE.getFound();
