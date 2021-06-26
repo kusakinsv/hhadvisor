@@ -38,9 +38,11 @@ public class VacancyParser {
         System.out.println("Pages:" + countpages);//количество страниц
         System.out.println(url);
         int counterIDs = 1;
-        int pagespluscount;
+        int pagesCount = 0;
         for (int j = 0; j <= countpages; j++) {
+
             if (counterIDs > 2000) break;
+            pagesCount++;
             url = mainurl + "?per_page=" + 20 + "&page=" + j + "&text=" + name;
             Models responseE = restTemplate.getForObject(url, Models.class);
             Integer found = responseE.getFound();
@@ -61,7 +63,8 @@ public class VacancyParser {
                             if (counterIDs > 2000) break;
             }
         }
-        System.out.println("Cicles: "+ countpages+ "|| Items: "+parsedlist.size());
+        System.out.println("Поиск завершен");
+        System.out.println("Cicles: "+ pagesCount + " || Items: "+parsedlist.size());
         return parsedlist;
     }
 
