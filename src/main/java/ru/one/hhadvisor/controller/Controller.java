@@ -64,9 +64,12 @@ public class Controller {
         String queryUrl = "";
        // queryUrl = hhurl + "?per_page=" + 20 + "&page=0" + page + "&text=" + name;
         VacancyParser parser = new VacancyParser();
+        if (count==null) {return parser.doParse(name);} else {
         System.out.println(queryUrl);
         return parser.doParse(name, count);
-    }
+    }}
+
+
 
     //    public List<Vacancy> getParams(String url) {
 //        VacancyParser parser = new VacancyParser();
