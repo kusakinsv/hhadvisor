@@ -26,7 +26,9 @@ public class VacancyParser {
         int countpages = 1;
         int searchPages;
         int searchvalues;
-        if (counter <= 20) countpages = 1;
+        int icount = 20;
+        if (counter <= 20) {countpages = 1;
+            icount = counter;}
         if (counter > 20) {
             if ((counter%20) !=0) {
             ostatok = counter % 20;
@@ -42,7 +44,7 @@ public class VacancyParser {
             url = mainurl + "?per_page=" + 20 + "&page=" + j + "&text=" + name;
             Models responseE = restTemplate.getForObject(url, Models.class);
             Integer found = responseE.getFound();
-            int icount = 20;
+
             if (j == countpages) icount = ostatok;
                         for (int i = 0; i < icount; i++) {
                 parsedlist.add(new Vacancy(counterIDs,
