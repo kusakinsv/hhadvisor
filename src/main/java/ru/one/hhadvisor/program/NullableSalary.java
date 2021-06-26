@@ -3,9 +3,9 @@ package ru.one.hhadvisor.program;
 import ru.one.hhadvisor.program.model.Salary;
 
 public class NullableSalary extends Salary {
-    private Integer from = 0;
-    private Integer to = 0;
-    private String currency = "null";
+    private Integer from = null;
+    private Integer to = null;
+    private String currency = null;
 
 //    public NullableSalary() {
 //        this.from = 0;

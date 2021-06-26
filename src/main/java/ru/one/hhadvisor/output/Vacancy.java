@@ -12,7 +12,7 @@ public class Vacancy {
     public Vacancy() {
     }
 
-    public Vacancy(Integer id, String name, String area, Integer salaryFrom, Integer salaryTo, String salaryCcurrency, Integer getAreaid, String uniqueId) {
+    public Vacancy(Integer id, String name, String area, Integer salaryFrom, Integer salaryTo, String salaryCcurrency, Integer getAreaid, Integer uniqueId) {
         this.id = id;
         this.name = name;
         this.area = area;
@@ -23,7 +23,7 @@ public class Vacancy {
         this.uniqueId = uniqueId;
     }
 
-    private  String uniqueId;
+    private  Integer uniqueId;
 
     public Integer getId() {
         return id;
@@ -81,11 +81,11 @@ public class Vacancy {
         this.getAreaid = getAreaid;
     }
 
-    public String getUniqueId() {
+    public Integer getUniqueId() {
         return uniqueId;
     }
 
-    public void setUniqueId(String uniqueId) {
+    public void setUniqueId(Integer uniqueId) {
         this.uniqueId = uniqueId;
     }
 }

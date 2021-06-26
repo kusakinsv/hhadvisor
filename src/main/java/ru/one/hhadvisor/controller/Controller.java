@@ -5,7 +5,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.one.hhadvisor.output.Vacancy;
 import ru.one.hhadvisor.services.VacancyParser;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -37,11 +40,6 @@ public class Controller {
     }
 
 
-
-    //        @GetMapping("/{vacName}")
-//        public ResponseEntity getVacancyById (@PathVariable String vacName){
-//            return ResponseEntity.ok(vacancyParser.getVacancyById(vacName));
-//        }
     @RequestMapping("/out")
     public List<Vacancy> getVacancies() {
         VacancyParser parser = new VacancyParser();
@@ -60,15 +58,23 @@ public class Controller {
                               // @RequestParam(value = "per_page", required = false) Integer perPage,
                                @RequestParam(value = "count", required = false) Integer count
     ) {
-        System.out.println("Text:" + name + " || Count:" + count);
+
         String queryUrl = "";
-       // queryUrl = hhurl + "?per_page=" + 20 + "&page=0" + page + "&text=" + name;
         VacancyParser parser = new VacancyParser();
         if (count==null) {return parser.doParse(name);} else {
         System.out.println(queryUrl);
         return parser.doParse(name, count);
     }}
 
+
+
+    //тестовый для возврата
+
+    public List<Map<String, String>> messages = new ArrayList<Map<String, String>>() {{
+        add(new HashMap<String, String>() {{put("id", "1"); put("text", "First Message"); }});
+        add(new HashMap<String, String>() {{put("id", "2"); put("text", "Second Message"); }});
+        add(new HashMap<String, String>() {{put("id", "3"); put("text", "Third Message"); }});
+    }};
 
 
 //    @GetMapping
