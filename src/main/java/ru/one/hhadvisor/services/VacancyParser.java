@@ -72,7 +72,7 @@ public class VacancyParser {
                             if (countProtector > 2000) break;
             }
         }
-        System.out.println("Поиск завершен");
+        System.out.println("Search Complete");
         System.out.println("counterIDs: " + counterIDs + "|| countProtector:" + countProtector);
         System.out.println("Cicles: "+ pagesCount + " || Items: "+parsedlist.size());
         return parsedlist;
@@ -81,7 +81,7 @@ public class VacancyParser {
 public List<Vacancy> doParse(String name) {
     int counter = 2000;
     System.out.println("Text:" + name + " || Count:" + counter);
-    if (counter > 2000) counter = 2000;
+//    if (counter > 2000) counter = 2000;
     String url = mainurl + "?per_page=" + 1 + "&page=" + 0 + "&text=" + name;
     Models responseFound = restTemplate.getForObject(url, Models.class);
     Integer foundItems = responseFound.getFound();
@@ -137,7 +137,7 @@ public List<Vacancy> doParse(String name) {
             if (countProtector > 2000) break;
         }
     }
-    System.out.println("Поиск завершен");
+    System.out.println("Search Complete");
     System.out.println("counterIDs: " + counterIDs + "|| countProtector:" + countProtector);
     System.out.println("Cicles: "+ pagesCount + " || Items: "+parsedlist.size());
     return parsedlist;
