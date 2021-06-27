@@ -1,5 +1,12 @@
 package ru.one.hhadvisor.output;
 
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Vacancy {
     private  Integer id;
     private  String name;
@@ -8,11 +15,17 @@ public class Vacancy {
     private  Integer salaryTo;
     private  String salaryCurrency;
     private  Integer getAreaid;
+    private  Integer uniqueId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private  Integer dbid;
+
 
     public Vacancy() {
     }
 
-    public Vacancy(Integer id, String name, String area, Integer salaryFrom, Integer salaryTo, String salaryCcurrency, Integer getAreaid, Integer uniqueId) {
+    public Vacancy(Integer dbid, Integer id, String name, String area, Integer salaryFrom, Integer salaryTo, String salaryCcurrency, Integer getAreaid, Integer uniqueId) {
+        this.dbid = dbid;
         this.id = id;
         this.name = name;
         this.area = area;
@@ -23,7 +36,7 @@ public class Vacancy {
         this.uniqueId = uniqueId;
     }
 
-    private  Integer uniqueId;
+
 
     public Integer getId() {
         return id;
@@ -87,5 +100,13 @@ public class Vacancy {
 
     public void setUniqueId(Integer uniqueId) {
         this.uniqueId = uniqueId;
+    }
+
+    public Integer getDbid() {
+        return dbid;
+    }
+
+    public void setDbid(Integer dbid) {
+        this.dbid = dbid;
     }
 }

@@ -1,18 +1,32 @@
 package ru.one.hhadvisor.controller;
 
+import net.minidev.json.JSONObject;
+import org.hibernate.boot.model.relational.Database;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
+import ru.one.hhadvisor.entity.repos.VacancyRepo;
 import ru.one.hhadvisor.output.Vacancy;
+import ru.one.hhadvisor.program.JsonAreas;
+import ru.one.hhadvisor.program.model.AreasFromString;
+import ru.one.hhadvisor.services.EntityManagerImpl;
 import ru.one.hhadvisor.services.VacancyParser;
 
+import javax.management.Query;
+import javax.persistence.EntityManager;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 
 @RestController
-@RequestMapping("/search")
+@RequestMapping("/")
 public class Controller {
 
 
@@ -28,52 +42,120 @@ public class Controller {
         this.vacancyParser = vacancyParser;
     }
 
+    @Autowired
+    private VacancyRepo vacancyRepo;
 
-    @GetMapping("/hello")
+    //    @GetMapping //рабочий основной=====================
+//    public List<Vacancy> searchParams(@RequestParam(value = "name", required = false) String name,
+//                                      // @RequestParam(value = "per_page", required = false) Integer perPage,
+//                                      @RequestParam(value = "count", required = false) Integer count
+//    ) {
+//
+//        String queryUrl = "";
+//        VacancyParser parser = new VacancyParser();
+//        if (count==null) {return parser.doParse(name);} else {
+//            System.out.println(queryUrl);
+//            return parser.doParse(name, count);
+//        }
+//    }
+//    //=================================================
+
+    @GetMapping("take")
+    public List<Vacancy> test() {
+
+        return StreamSupport.stream(vacancyRepo.findAll().spliterator(), false).collect(Collectors.toList());
+
+
+//                StreamSupport
+//                .stream(vacancyRepo.findAll().spliterator(), false)
+//                .collect(Collectors.toList());
+    }
+
+    @GetMapping("search") //  Погружение в БД
+    public String searchParams(@RequestParam(value = "name", required = false) String name,
+                                      // @RequestParam(value = "per_page", required = false) Integer perPage,
+                                      @RequestParam(value = "count", required = false) Integer count,
+                                      @RequestParam(value = "area", required = false) Integer area
+    ) throws InterruptedException {
+        VacancyParser parser = new VacancyParser();
+//        JdbcTemplate template = new JdbcTemplate();
+//        template.execute("TRUNCATE TABLE vacancy");
+        if (count == null && area == null) {
+            List<Vacancy> vacancies = parser.doParse(name);
+            for (Vacancy v : vacancies
+            ) {
+                vacancyRepo.save(v);
+            }
+            return "Complete";
+        } else if (area == null) {
+            List<Vacancy> vacancies = parser.doParse(name, count);
+            for (Vacancy v : vacancies
+            ) {
+                vacancyRepo.save(v);
+            }
+            return "Complete";
+        } else {
+            List<Vacancy> vacancies = parser.doParseWithAreas(name, count, area);
+            for (Vacancy v : vacancies
+            ) {
+                vacancyRepo.save(v);
+            }
+            return "Complete";
+        }
+    }
+
+
+    @GetMapping("/hello")//тест
     public String list() {
         return "Hello";
     }
 
-    @GetMapping("/vac")
+    @GetMapping("/vac")//тест
     public String vac(@RequestParam("name") String name) {
         return "first/hello";
     }
 
+    @GetMapping("/areas")
+    public ResponseEntity getAreasInJson() throws FileNotFoundException {
+        JsonAreas jsonAreas = new JsonAreas();
+        return ResponseEntity.ok(jsonAreas.toString());
+    }
 
-    @RequestMapping("/out")
+    @GetMapping("/areas2")
+    public File getAreasInJson2() throws FileNotFoundException {
+        JsonAreas jsonAreas = new JsonAreas();
+        return new File("java/other/areas.json");
+    }
+
+
+    @RequestMapping("/out")//тест
     public List<Vacancy> getVacancies() {
         VacancyParser parser = new VacancyParser();
         return parser.doParse(testurl);
     }
 
 
-    @RequestMapping("/name=Java")
+    @RequestMapping("/name=Java")//тест
     public List<Vacancy> getString() {
         VacancyParser parser = new VacancyParser();
         return parser.doParse(testurl);
     }
 
-    @GetMapping
-    public List<Vacancy> searchParams(@RequestParam(value = "name", required = false) String name,
-                              // @RequestParam(value = "per_page", required = false) Integer perPage,
-                               @RequestParam(value = "count", required = false) Integer count
-    ) {
-
-        String queryUrl = "";
-        VacancyParser parser = new VacancyParser();
-        if (count==null) {return parser.doParse(name);} else {
-        System.out.println(queryUrl);
-        return parser.doParse(name, count);
-    }}
-
-
 
     //тестовый для возврата
-
     public List<Map<String, String>> messages = new ArrayList<Map<String, String>>() {{
-        add(new HashMap<String, String>() {{put("id", "1"); put("text", "First Message"); }});
-        add(new HashMap<String, String>() {{put("id", "2"); put("text", "Second Message"); }});
-        add(new HashMap<String, String>() {{put("id", "3"); put("text", "Third Message"); }});
+        add(new HashMap<String, String>() {{
+            put("id", "1");
+            put("text", "First Message");
+        }});
+        add(new HashMap<String, String>() {{
+            put("id", "2");
+            put("text", "Second Message");
+        }});
+        add(new HashMap<String, String>() {{
+            put("id", "3");
+            put("text", "Third Message");
+        }});
     }};
 
 
@@ -89,9 +171,6 @@ public class Controller {
 //    }
 
 
-
-
-
 }
 
 //    @GetMapping
@@ -103,10 +182,6 @@ public class Controller {
 //"https://api.hh.ru/vacancies?per_page=4&page=22&text=Java"
 
 
-
-
-
-
 //    @GetMapping //пример запроса с параметрами
 //    public String helloPage(HttpServletRequest request){
 //           String usernamename = request.getParameter("username");
@@ -114,8 +189,6 @@ public class Controller {
 //        System.out.println("Hello " + usernamename+ " " + surname);
 //        return "helooworld";
 //       }
-
-
 
 
 //    @GetMapping("/v")
