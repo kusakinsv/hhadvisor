@@ -1,7 +1,9 @@
 package ru.one.hhadvisor.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import ru.one.hhadvisor.entity.repos.VacancyRepo;
 import ru.one.hhadvisor.output.Vacancy;
 import ru.one.hhadvisor.program.model.Models;
 
