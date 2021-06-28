@@ -61,45 +61,68 @@ public class Controller {
 //            return parser.doParse(name, count);
 //        }
 //    }
-//    //=================================================
-
-//    @GetMapping("take")
-//    public List<Vacancy> test() {
-//
-//        return StreamSupport.stream(vacancyRepo.findAll().spliterator(), false).collect(Collectors.toList());
-//
-//
-////                StreamSupport
-////                .stream(vacancyRepo.findAll().spliterator(), false)
-////                .collect(Collectors.toList());
-//    }
 
     @GetMapping("search") //  Погружение в БД
-    public String searchParams(@RequestParam(value = "name", required = false) String name,
-                                      // @RequestParam(value = "per_page", required = false) Integer perPage,
-                                      @RequestParam(value = "count", required = false) Integer count,
+    public HashMap<String, String> searchParams(@RequestParam(value = "name", required = false) String name,
                                       @RequestParam(value = "area", required = false) Integer area
-    ) throws InterruptedException, SQLException {
+    ) throws SQLException {
         TableCleaner tc = new TableCleaner();
         tc.truncate("vacancy");
         VacancyParser parser = new VacancyParser();
-//        JdbcTemplate template = new JdbcTemplate();
-//        template.execute("TRUNCATE TABLE vacancy");
-        if (count == null && area == null) {
+        if (name == null && area == null) {
+            System.out.println("Error: no parameters");
+            return new HashMap<String, String>() {{
+                put("system", "no parameters");
+            }};
+        } else if (area == null) {
             List<Vacancy> vacancies = parser.doParse(name);
             vacancyRepo.saveAll(vacancies);
-            return "Complete";
-        } else if (area == null) {
-            List<Vacancy> vacancies = parser.doParse(name, count);
-            vacancyRepo.saveAll(vacancies);
-            return "Complete";
-        } else {
-            List<Vacancy> vacancies = parser.doParseWithAreas(name, count, area);
+            System.out.println("DB operations complete");
+            return new HashMap<String, String>() {{
+                put("system", "operation complete");
+            }};
+        } else if (name == null) {
+             List<Vacancy> vacancies = parser.doParse(area);
              vacancyRepo.saveAll(vacancies);
             System.out.println("DB operations complete");
-            return "Complete";
-        }
+            return new HashMap<String, String>() {{
+                put("system", "operation complete");
+            }};
+    } else {
+            List<Vacancy> vacancies = parser.doParseWithAreas(name, area);
+            vacancyRepo.saveAll(vacancies);
+            System.out.println("DB operations complete");
+            return new HashMap<String, String>() {{
+            put("system", "operation complete");
+        }};}
     }
+
+
+//    //===========Рабочий======================================
+//    @GetMapping("search") //  Погружение в БД
+//    public String searchParams(@RequestParam(value = "name", required = false) String name,
+//                                      // @RequestParam(value = "per_page", required = false) Integer perPage,
+//                                      @RequestParam(value = "count", required = false) Integer count,
+//                                      @RequestParam(value = "area", required = false) Integer area
+//    ) throws InterruptedException, SQLException {
+//        TableCleaner tc = new TableCleaner();
+//        tc.truncate("vacancy");
+//        VacancyParser parser = new VacancyParser();
+//        if (count == null && area == null) {
+//            List<Vacancy> vacancies = parser.doParse(name);
+//            vacancyRepo.saveAll(vacancies);
+//            return "Complete";
+//        } else if (area == null) {
+//            List<Vacancy> vacancies = parser.doParse(name, count);
+//            vacancyRepo.saveAll(vacancies);
+//            return "Complete";
+//        } else {
+//            List<Vacancy> vacancies = parser.doParseWithAreas(name, count, area);
+//             vacancyRepo.saveAll(vacancies);
+//            System.out.println("DB operations complete");
+//            return "Complete";
+//        }
+//    }
 
     @GetMapping("take")
     public List<Vacancy> test() {
@@ -108,20 +131,30 @@ public class Controller {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/hello")//тест
-    public String list() {
-        return "Hello";
+    @RequestMapping("test")
+    public  List<Map<String, String>> testResponse(){
+        List<Map<String, String>> messages = new ArrayList<Map<String, String>>() {{
+            add(new HashMap<String, String>() {{
+                put("id", "1");
+                put("text", "First Message");
+            }});
+            add(new HashMap<String, String>() {{
+                put("id", "2");
+                put("text", "Second Message");
+            }});
+            add(new HashMap<String, String>() {{
+                put("id", "3");
+                put("text", "Third Message");
+            }});
+        }};
+        return messages;
     }
 
-    @GetMapping("/vac")//тест
-    public String vac(@RequestParam("name") String name) {
-        return "first/hello";
-    }
 
     @GetMapping("/areas")
     public ResponseEntity getAreasInJson() throws FileNotFoundException {
         JsonAreas jsonAreas = new JsonAreas();
-        return ResponseEntity.ok(jsonAreas.toString());
+        return ResponseEntity.ok("classpath:areas.json");
     }
 
     @GetMapping("/areas2")
@@ -130,36 +163,15 @@ public class Controller {
         return new File("java/other/areas.json");
     }
 
-
-    @RequestMapping("/out")//тест
-    public List<Vacancy> getVacancies() {
-        VacancyParser parser = new VacancyParser();
-        return parser.doParse(testurl);
-    }
-
-
     @RequestMapping("/name=Java")//тест
     public List<Vacancy> getString() {
         VacancyParser parser = new VacancyParser();
         return parser.doParse(testurl);
     }
+}
 
 
-    //тестовый для возврата
-    public List<Map<String, String>> messages = new ArrayList<Map<String, String>>() {{
-        add(new HashMap<String, String>() {{
-            put("id", "1");
-            put("text", "First Message");
-        }});
-        add(new HashMap<String, String>() {{
-            put("id", "2");
-            put("text", "Second Message");
-        }});
-        add(new HashMap<String, String>() {{
-            put("id", "3");
-            put("text", "Third Message");
-        }});
-    }};
+
 
 
 //    @GetMapping
@@ -174,7 +186,6 @@ public class Controller {
 //    }
 
 
-}
 
 //    @GetMapping
 //    public String helloPage(@RequestParam(value = "username", required = false) String username,

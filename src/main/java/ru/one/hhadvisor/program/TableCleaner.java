@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class TableCleaner {
     public void truncate(String tableName) throws SQLException {
-        String url = "jdbc:postgresql://35.238.106.186/springdatabase";
+        String url = "jdbc:postgresql://35.238.106.186/springdatabase2";
         Properties props = new Properties();
         props.setProperty("user","admin");
         props.setProperty("password","123450000");
