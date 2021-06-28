@@ -3,10 +3,13 @@ package ru.one.hhadvisor.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import ru.one.hhadvisor.controller.Controller;
 import ru.one.hhadvisor.entity.repos.VacancyRepo;
 import ru.one.hhadvisor.output.Vacancy;
+import ru.one.hhadvisor.program.TableCleaner;
 import ru.one.hhadvisor.program.model.Models;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +20,8 @@ public class VacancyParser {
     private static final String mainurl = "https://api.hh.ru/vacancies";
 
 
-    public List<Vacancy> doParseWithAreas(String name, int counter, int area) {
+    public List<Vacancy> doParseWithAreas(String name, int counter, int area) throws SQLException {
+
         System.out.println("Text:" + name + " || Count:" + counter + " || Area: " + area);
         if (counter > 2000) counter = 2000;
         String url = mainurl + "?per_page=" + 1 + "&page=" + 0 + "&text=" + name + "&area=" + area;
@@ -66,7 +70,6 @@ public class VacancyParser {
                         responseE.getItems().get(i).getSalary().getCurrency(),
                         Integer.parseInt(responseE.getItems().get(i).getArea().getId()),
                         Integer.parseInt(responseE.getItems().get(i).getId()))
-
                 );
                 counterIDs++;
                 if (counterIDs > 2000) break;

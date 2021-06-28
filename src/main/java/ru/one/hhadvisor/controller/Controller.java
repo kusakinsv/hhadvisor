@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.one.hhadvisor.entity.repos.VacancyRepo;
 import ru.one.hhadvisor.output.Vacancy;
 import ru.one.hhadvisor.program.JsonAreas;
+import ru.one.hhadvisor.program.TableCleaner;
+import ru.one.hhadvisor.program.Vacancies;
 import ru.one.hhadvisor.program.model.AreasFromString;
 import ru.one.hhadvisor.services.EntityManagerImpl;
 import ru.one.hhadvisor.services.VacancyParser;
@@ -17,6 +19,7 @@ import javax.management.Query;
 import javax.persistence.EntityManager;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,50 +63,50 @@ public class Controller {
 //    }
 //    //=================================================
 
-    @GetMapping("take")
-    public List<Vacancy> test() {
-
-        return StreamSupport.stream(vacancyRepo.findAll().spliterator(), false).collect(Collectors.toList());
-
-
-//                StreamSupport
-//                .stream(vacancyRepo.findAll().spliterator(), false)
-//                .collect(Collectors.toList());
-    }
+//    @GetMapping("take")
+//    public List<Vacancy> test() {
+//
+//        return StreamSupport.stream(vacancyRepo.findAll().spliterator(), false).collect(Collectors.toList());
+//
+//
+////                StreamSupport
+////                .stream(vacancyRepo.findAll().spliterator(), false)
+////                .collect(Collectors.toList());
+//    }
 
     @GetMapping("search") //  Погружение в БД
     public String searchParams(@RequestParam(value = "name", required = false) String name,
                                       // @RequestParam(value = "per_page", required = false) Integer perPage,
                                       @RequestParam(value = "count", required = false) Integer count,
                                       @RequestParam(value = "area", required = false) Integer area
-    ) throws InterruptedException {
+    ) throws InterruptedException, SQLException {
+        TableCleaner tc = new TableCleaner();
+        tc.truncate("vacancy");
         VacancyParser parser = new VacancyParser();
 //        JdbcTemplate template = new JdbcTemplate();
 //        template.execute("TRUNCATE TABLE vacancy");
         if (count == null && area == null) {
             List<Vacancy> vacancies = parser.doParse(name);
-            for (Vacancy v : vacancies
-            ) {
-                vacancyRepo.save(v);
-            }
+            vacancyRepo.saveAll(vacancies);
             return "Complete";
         } else if (area == null) {
             List<Vacancy> vacancies = parser.doParse(name, count);
-            for (Vacancy v : vacancies
-            ) {
-                vacancyRepo.save(v);
-            }
+            vacancyRepo.saveAll(vacancies);
             return "Complete";
         } else {
             List<Vacancy> vacancies = parser.doParseWithAreas(name, count, area);
-            for (Vacancy v : vacancies
-            ) {
-                vacancyRepo.save(v);
-            }
+             vacancyRepo.saveAll(vacancies);
+            System.out.println("DB operations complete");
             return "Complete";
         }
     }
 
+    @GetMapping("take")
+    public List<Vacancy> test() {
+        return StreamSupport
+                .stream(vacancyRepo.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+    }
 
     @GetMapping("/hello")//тест
     public String list() {
@@ -217,31 +220,6 @@ public class Controller {
 //        public ResponseEntity getAllVacancies() {
 //           return ResponseEntity.ok(recipient.getAllVacancies().getItems());
 //      }
-
-//        @PostMapping
-//        public ResponseEntity getAllVacancies(@RequestBody SearchParametersVacancy params) {
-//            return ResponseEntity.ok(vacRec.getAllVacancies(params).getItems());
-//        }
-
-//        @GetMapping("/{vacId}")
-//        public ResponseEntity getVacancyById(@PathVariable String vacId) {
-//            return ResponseEntity.ok(vacRec.getVacancyById(vacId));
-//        }
-//    @GetMapping("/{vacId}")
-//    public ResponseEntity getVacancyById(@PathVariable String vacId) {
-//        return ResponseEntity.ok(vacRec.getVacancyById(vacId));
-//    }
-
-
-//   @GetMapping("/{name}")
-//      public ResponseEntity getVacancyByName(@PathVariable String name) {
-//       return ResponseEntity.ok(vacRec.getVacancyByName(name));
-// }
-
-    /*@GetMapping("/{vacName}")
-    public ResponseEntity getVacancyByName(@PathVariable String vacName) {
-        return ResponseEntity.ok(vacRec.getVacancyByName(vacName));
-    }*/
 
 
 

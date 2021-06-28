@@ -24,8 +24,7 @@ public class HhadvisorApplication  {
 		System.out.println("* Application Started *");
 		System.out.println("***********************");
 
-//		JdbcTemplate template = new JdbcTemplate();
-//		template.update("TRUNCATE TABLE vacancy");
+
 
 	}
 }
