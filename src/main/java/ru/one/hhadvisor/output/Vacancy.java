@@ -10,6 +10,7 @@ import javax.persistence.Id;
 public class Vacancy {
     private  Integer id;
     private  String name;
+    private  String company;
     private  String area;
     private  Integer salaryFrom;
     private  Integer salaryTo;
@@ -24,10 +25,11 @@ public class Vacancy {
     public Vacancy() {
     }
 
-    public Vacancy(Integer dbid, Integer id, String name, String area, Integer salaryFrom, Integer salaryTo, String salaryCcurrency, Integer getAreaid, Integer uniqueId) {
+    public Vacancy(Integer dbid, Integer id, String name, String company, String area, Integer salaryFrom, Integer salaryTo, String salaryCcurrency, Integer getAreaid, Integer uniqueId) {
         this.dbid = dbid;
         this.id = id;
         this.name = name;
+        this.company = company;
         this.area = area;
         this.salaryFrom = salaryFrom;
         this.salaryTo = salaryTo;
@@ -108,5 +110,13 @@ public class Vacancy {
 
     public void setDbid(Integer dbid) {
         this.dbid = dbid;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
     }
 }

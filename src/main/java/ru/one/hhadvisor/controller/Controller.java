@@ -1,24 +1,16 @@
 package ru.one.hhadvisor.controller;
 
-import net.minidev.json.JSONObject;
-import org.hibernate.boot.model.relational.Database;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import ru.one.hhadvisor.entity.repos.VacancyRepo;
 import ru.one.hhadvisor.output.Vacancy;
 import ru.one.hhadvisor.program.JsonAreas;
 import ru.one.hhadvisor.program.TableCleaner;
-import ru.one.hhadvisor.program.Vacancies;
-import ru.one.hhadvisor.program.model.AreasFromString;
-import ru.one.hhadvisor.services.EntityManagerImpl;
 import ru.one.hhadvisor.services.VacancyParser;
 
-import javax.management.Query;
-import javax.persistence.EntityManager;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,9 +57,8 @@ public class Controller {
     @GetMapping("search") //  Погружение в БД
     public HashMap<String, String> searchParams(@RequestParam(value = "name", required = false) String name,
                                       @RequestParam(value = "area", required = false) Integer area
-    ) throws SQLException {
-        TableCleaner tc = new TableCleaner();
-        tc.truncate("vacancy");
+    ) throws SQLException, InterruptedException {
+
         VacancyParser parser = new VacancyParser();
         if (name == null && area == null) {
             System.out.println("Error: no parameters");
@@ -98,38 +89,19 @@ public class Controller {
     }
 
 
-//    //===========Рабочий======================================
-//    @GetMapping("search") //  Погружение в БД
-//    public String searchParams(@RequestParam(value = "name", required = false) String name,
-//                                      // @RequestParam(value = "per_page", required = false) Integer perPage,
-//                                      @RequestParam(value = "count", required = false) Integer count,
-//                                      @RequestParam(value = "area", required = false) Integer area
-//    ) throws InterruptedException, SQLException {
-//        TableCleaner tc = new TableCleaner();
-//        tc.truncate("vacancy");
-//        VacancyParser parser = new VacancyParser();
-//        if (count == null && area == null) {
-//            List<Vacancy> vacancies = parser.doParse(name);
-//            vacancyRepo.saveAll(vacancies);
-//            return "Complete";
-//        } else if (area == null) {
-//            List<Vacancy> vacancies = parser.doParse(name, count);
-//            vacancyRepo.saveAll(vacancies);
-//            return "Complete";
-//        } else {
-//            List<Vacancy> vacancies = parser.doParseWithAreas(name, count, area);
-//             vacancyRepo.saveAll(vacancies);
-//            System.out.println("DB operations complete");
-//            return "Complete";
-//        }
-//    }
-
     @GetMapping("take")
-    public List<Vacancy> test() {
+    public List<Vacancy> take() {
         return StreamSupport
                 .stream(vacancyRepo.findAll().spliterator(), false)
                 .collect(Collectors.toList());
     }
+
+//    @GetMapping("areas")
+//    public String
+//     test() throws IOException {
+//        JsonAreas jsonAreas = new JsonAreas();
+//        return jsonAreas.testTakeAreas();
+//    }
 
     @RequestMapping("test")
     public  List<Map<String, String>> testResponse(){
@@ -151,11 +123,11 @@ public class Controller {
     }
 
 
-    @GetMapping("/areas")
-    public ResponseEntity getAreasInJson() throws FileNotFoundException {
-        JsonAreas jsonAreas = new JsonAreas();
-        return ResponseEntity.ok("classpath:areas.json");
-    }
+//    @GetMapping("/areas")
+//    public ResponseEntity getAreasInJson() throws FileNotFoundException {
+//        JsonAreas jsonAreas = new JsonAreas();
+//        return ResponseEntity.ok("classpath:areas.json");
+//    }
 
     @GetMapping("/areas2")
     public File getAreasInJson2() throws FileNotFoundException {
