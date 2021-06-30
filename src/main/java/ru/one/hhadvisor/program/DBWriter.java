@@ -1,31 +1,23 @@
 package ru.one.hhadvisor.program;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.one.hhadvisor.entity.repos.ThreadSaverRepo;
 import ru.one.hhadvisor.output.Vacancy;
-import ru.one.hhadvisor.program.threads.ThreadParser;
 import ru.one.hhadvisor.program.threads.ThreadSaver;
-import ru.one.hhadvisor.services.VacancyParser;
-
-import java.util.ArrayList;
 import java.util.List;
 
 
-
+@Component
 public class DBWriter {
     public static Vacancy vacancy;
     public static int writecounter = 0;
 
     @Autowired
- private ThreadSaver threadSaver;
+    private ThreadSaver threadSaver;
 
 
 
 
     public DBWriter() {
-
     }
 //    @Autowired
 //    public ThreadSaverRepo threadSaverRepo;

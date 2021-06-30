@@ -1,6 +1,8 @@
 package ru.one.hhadvisor.program.threads;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 
@@ -12,6 +14,7 @@ import ru.one.hhadvisor.program.DBWriter;
 import java.util.ArrayList;
 import java.util.List;
 @Service
+@Scope("prototype")
 public class ThreadSaver extends Thread{
     public static List<Vacancy> vacancyListFoeDBSaver = new ArrayList<>();
     public static int threadCounter = 0;

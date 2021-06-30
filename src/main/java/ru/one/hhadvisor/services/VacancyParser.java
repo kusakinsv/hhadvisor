@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.one.hhadvisor.output.Vacancy;
 import ru.one.hhadvisor.program.TableCleaner;
+import ru.one.hhadvisor.program.exp.ModelForExperience;
 import ru.one.hhadvisor.program.model.Models;
 import ru.one.hhadvisor.program.threads.ThreadParser;
 
@@ -14,9 +15,10 @@ import java.util.List;
 
 @Service
 public class VacancyParser {
-    private static int counter = 50;
+    private static int counter = 2000;
     //    public static RestTemplate restTemplate;
     public static final String mainurl = "https://api.hh.ru/vacancies";
+
     public static int countpages = 1; //default = 1
     public static String name;
     public static int area;
@@ -82,7 +84,7 @@ public class VacancyParser {
         System.out.println("Search Complete");
         System.out.println("насчитал: " + ThreadParser.integercountVacancy);
         System.out.println("counterIDs: " + ThreadParser.counterIDs + "|| countProtector:" + countProtector);
-        System.out.println("Cicles: "+ pagesCount + " || Items: "+parsedlist.size());
+        System.out.println("Cicles: "+ pagesCount + " || Items: " + ThreadParser.getListOfVacancies().size());
         //========возврат потоков на дефолтные значения - ThreadParser
         ThreadParser.threadCounter = 0;
         ThreadParser.counterIDs = 1;
@@ -95,7 +97,7 @@ public class VacancyParser {
         round = 0;
 
         //===============================================
-        System.out.println("Размер: " + ThreadParser.getListOfVacancies().size());
+       // System.out.println("Размер: " + ThreadParser.getListOfVacancies().size());
         return ThreadParser.getListOfVacancies();
     }
 
@@ -197,6 +199,7 @@ public class VacancyParser {
             pagesCount = j+1;
             url = mainurl + "?per_page=" + 20 + "&page=" + j + "&area=" + area;
             Models response = restTemplate.getForObject(url, Models.class);
+
             Integer found = response.getFound();
 
             if (j == countpages) icount = leftover;
@@ -211,6 +214,8 @@ public class VacancyParser {
                         response.getItems().get(i).getSalary().getFrom(),
                         response.getItems().get(i).getSalary().getTo(),
                         response.getItems().get(i).getSalary().getCurrency(),
+                        null,
+                        null,
                         Integer.parseInt(response.getItems().get(i).getArea().getId()),
                         Integer.parseInt(response.getItems().get(i).getId()))
                 );
@@ -273,6 +278,8 @@ public class VacancyParser {
                         response.getItems().get(i).getSalary().getFrom(),
                         response.getItems().get(i).getSalary().getTo(),
                         response.getItems().get(i).getSalary().getCurrency(),
+                        null,
+                        null,
                         Integer.parseInt(response.getItems().get(i).getArea().getId()),
                         Integer.parseInt(response.getItems().get(i).getId()))
                 );

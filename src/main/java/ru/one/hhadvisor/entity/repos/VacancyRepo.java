@@ -7,10 +7,5 @@ import ru.one.hhadvisor.output.Vacancy;
 
 public interface VacancyRepo extends CrudRepository<Vacancy, Long> {
 
-    @Modifying
-    @Query(
-            value = "truncate table vacancy",
-            nativeQuery = true
-    )
-    void truncateMyTable();
+
 }

@@ -15,8 +15,11 @@ public class Vacancy {
     private  Integer salaryFrom;
     private  Integer salaryTo;
     private  String salaryCurrency;
+    private  String experienceId;
+    private  String experienceName;
     private  Integer getAreaid;
     private  Integer uniqueId;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private  Integer dbid;
@@ -25,7 +28,7 @@ public class Vacancy {
     public Vacancy() {
     }
 
-    public Vacancy(Integer dbid, Integer id, String name, String company, String area, Integer salaryFrom, Integer salaryTo, String salaryCcurrency, Integer getAreaid, Integer uniqueId) {
+    public Vacancy(Integer dbid, Integer id, String name, String company, String area, Integer salaryFrom, Integer salaryTo, String salaryCcurrency, String experienceId, String experienceName, Integer getAreaid, Integer uniqueId) {
         this.dbid = dbid;
         this.id = id;
         this.name = name;
@@ -34,6 +37,8 @@ public class Vacancy {
         this.salaryFrom = salaryFrom;
         this.salaryTo = salaryTo;
         this.salaryCurrency = salaryCcurrency;
+        this.experienceId = experienceId;
+        this.experienceName = experienceName;
         this.getAreaid = getAreaid;
         this.uniqueId = uniqueId;
     }
@@ -118,5 +123,21 @@ public class Vacancy {
 
     public void setCompany(String company) {
         this.company = company;
+    }
+
+    public String getExperienceId() {
+        return experienceId;
+    }
+
+    public void setExperienceId(String experienceId) {
+        this.experienceId = experienceId;
+    }
+
+    public String getExperienceName() {
+        return experienceName;
+    }
+
+    public void setExperienceName(String experienceName) {
+        this.experienceName = experienceName;
     }
 }

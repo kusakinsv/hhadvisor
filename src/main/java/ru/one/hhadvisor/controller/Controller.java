@@ -1,13 +1,11 @@
 package ru.one.hhadvisor.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.one.hhadvisor.entity.repos.ThreadSaverRepo;
 import ru.one.hhadvisor.entity.repos.VacancyRepo;
 import ru.one.hhadvisor.output.Vacancy;
-import ru.one.hhadvisor.program.DBWriter;
 import ru.one.hhadvisor.program.JsonAreas;
-import ru.one.hhadvisor.program.TableCleaner;
 import ru.one.hhadvisor.program.threads.ThreadSaver;
 import ru.one.hhadvisor.services.VacancyParser;
 
@@ -84,8 +82,6 @@ public class Controller {
             vacancyRepo.saveAll(vacancies);
             //DBWriter.toWrite(vacancies);
             System.out.println("TOTAL " + ThreadSaver.vacancyListFoeDBSaver.size());
-
-
             System.out.println("DB operations complete");
             return new HashMap<String, String>() {{
                 put("system", "operation complete");
