@@ -2,20 +2,20 @@ package ru.one.hhadvisor.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.one.hhadvisor.entity.repos.ThreadSaverRepo;
 import ru.one.hhadvisor.entity.repos.VacancyRepo;
 import ru.one.hhadvisor.output.Vacancy;
+import ru.one.hhadvisor.program.DBWriter;
 import ru.one.hhadvisor.program.JsonAreas;
 import ru.one.hhadvisor.program.TableCleaner;
+import ru.one.hhadvisor.program.threads.ThreadSaver;
 import ru.one.hhadvisor.services.VacancyParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -36,9 +36,8 @@ public class Controller {
     public Controller(VacancyParser vacancyParser) {
         this.vacancyParser = vacancyParser;
     }
-
     @Autowired
-    private VacancyRepo vacancyRepo;
+    public VacancyRepo vacancyRepo;
 
     //    @GetMapping //рабочий основной=====================
 //    public List<Vacancy> searchParams(@RequestParam(value = "name", required = false) String name,
@@ -56,7 +55,7 @@ public class Controller {
 
     @GetMapping("search") //  Погружение в БД
     public HashMap<String, String> searchParams(@RequestParam(value = "name", required = false) String name,
-                                      @RequestParam(value = "area", required = false) Integer area
+                                                @RequestParam(value = "area", required = false) Integer area
     ) throws SQLException, InterruptedException {
 
         VacancyParser parser = new VacancyParser();
@@ -67,29 +66,34 @@ public class Controller {
             }};
         } else if (area == null) {
             List<Vacancy> vacancies = parser.doParse(name);
-            vacancyRepo.saveAll(vacancies);
+            // vacancyRepo.saveAll(vacancies);
             System.out.println("DB operations complete");
             return new HashMap<String, String>() {{
                 put("system", "operation complete");
             }};
         } else if (name == null) {
-             List<Vacancy> vacancies = parser.doParse(area);
-             vacancyRepo.saveAll(vacancies);
+            List<Vacancy> vacancies = parser.doParse(area);
+            //  vacancyRepo.saveAll(vacancies);
             System.out.println("DB operations complete");
             return new HashMap<String, String>() {{
                 put("system", "operation complete");
             }};
-    } else {
+        } else {
             List<Vacancy> vacancies = parser.doParseWithAreas(name, area);
+            System.out.println("DB write operations....");
             vacancyRepo.saveAll(vacancies);
+            //DBWriter.toWrite(vacancies);
+            System.out.println("TOTAL " + ThreadSaver.vacancyListFoeDBSaver.size());
+
+
             System.out.println("DB operations complete");
             return new HashMap<String, String>() {{
-            put("system", "operation complete");
-        }};}
+                put("system", "operation complete");
+            }};}
     }
 
 
-    @GetMapping("take")
+    @GetMapping("take") //================Спрятал на время теста
     public List<Vacancy> take() {
         return StreamSupport
                 .stream(vacancyRepo.findAll().spliterator(), false)
@@ -121,20 +125,11 @@ public class Controller {
         }};
         return messages;
     }
-
-
-//    @GetMapping("/areas")
-//    public ResponseEntity getAreasInJson() throws FileNotFoundException {
-//        JsonAreas jsonAreas = new JsonAreas();
-//        return ResponseEntity.ok("classpath:areas.json");
-//    }
-
     @GetMapping("/areas2")
     public File getAreasInJson2() throws FileNotFoundException {
         JsonAreas jsonAreas = new JsonAreas();
         return new File("java/other/areas.json");
     }
-
     @RequestMapping("/name=Java")//тест
     public List<Vacancy> getString() {
         VacancyParser parser = new VacancyParser();
@@ -142,7 +137,11 @@ public class Controller {
     }
 }
 
-
+//    @GetMapping("/areas")
+//    public ResponseEntity getAreasInJson() throws FileNotFoundException {
+//        JsonAreas jsonAreas = new JsonAreas();
+//        return ResponseEntity.ok("classpath:areas.json");
+//    }
 
 
 
@@ -159,12 +158,7 @@ public class Controller {
 
 
 
-//    @GetMapping
-//    public String helloPage(@RequestParam(value = "username", required = false) String username,
-//                            @RequestParam(value = "surname", required = false) String surname) {
-//        System.out.println("Hello " + username + " " + surname);
-//        return "helooworld";
-//    }
+
 //"https://api.hh.ru/vacancies?per_page=4&page=22&text=Java"
 
 
@@ -177,32 +171,7 @@ public class Controller {
 //       }
 
 
-//    @GetMapping("/v")
-//    public ResponseEntity getNamedVacancies(){
-//           return ResponseEntity.ok();
-//    }
 
-
-//        @Autowired
-//        public Controller(Program vacRec) {
-//            this.vacRec = vacRec;
-//        }
-
-//1, "Name", "Россия", 10, 20 ,"RUB", 33, 333)
-
-//            @GetMapping("/{hello}")
-//        public VacancyModel getVacancy() {
-//            VacRec r = new VacRec();
-//            r.testVacancyResponse();
-//        return new VacancyModel();
-//
-//      }
-
-
-//        @GetMapping
-//        public ResponseEntity getAllVacancies() {
-//           return ResponseEntity.ok(recipient.getAllVacancies().getItems());
-//      }
 
 
 

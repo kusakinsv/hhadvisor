@@ -2,7 +2,6 @@ package ru.one.hhadvisor.services;
 
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 import ru.one.hhadvisor.output.Vacancy;
 import ru.one.hhadvisor.program.TableCleaner;
@@ -15,8 +14,8 @@ import java.util.List;
 
 @Service
 public class VacancyParser {
-    private static int counter = 2000;
-//    public static RestTemplate restTemplate;
+    private static int counter = 50;
+    //    public static RestTemplate restTemplate;
     public static final String mainurl = "https://api.hh.ru/vacancies";
     public static int countpages = 1; //default = 1
     public static String name;
@@ -25,7 +24,9 @@ public class VacancyParser {
     public static int countProtector = 1;
     public static int leftover = 0;
     public static int round = 0;
-    public static Models responseE;
+    public static Models response;
+
+
 
     RestTemplate restTemplate = new RestTemplate();
 
@@ -61,7 +62,7 @@ public class VacancyParser {
 
         for (int j = 0; j <= countpages; j++) {
             url = VacancyParser.mainurl + "?per_page=" + 20 + "&page=" + VacancyParser.round + "&text=" + VacancyParser.name + "&area=" + VacancyParser.area;
-            responseE = restTemplate.getForObject(url, Models.class);
+            response = restTemplate.getForObject(url, Models.class);
             round = j;
             ThreadParser tp = new ThreadParser();
             tp.run();
@@ -195,23 +196,23 @@ public class VacancyParser {
             //============================
             pagesCount = j+1;
             url = mainurl + "?per_page=" + 20 + "&page=" + j + "&area=" + area;
-            Models responseE = restTemplate.getForObject(url, Models.class);
-            Integer found = responseE.getFound();
+            Models response = restTemplate.getForObject(url, Models.class);
+            Integer found = response.getFound();
 
             if (j == countpages) icount = leftover;
             for (int i = 0; i < icount; i++) {
                 countProtector++;
-                if (responseE.getItems().get(i).getSalary().getFrom() == null && responseE.getItems().get(i).getSalary().getTo() == null) continue;
-                if (!responseE.getItems().get(i).getSalary().getCurrency().equals("RUR")) continue;
+                if (response.getItems().get(i).getSalary().getFrom() == null && response.getItems().get(i).getSalary().getTo() == null) continue;
+                if (!response.getItems().get(i).getSalary().getCurrency().equals("RUR")) continue;
                 parsedlist.add(new Vacancy(null, counterIDs,
-                        responseE.getItems().get(i).getName(),
-                        responseE.getItems().get(i).getArea().getName(),
-                        responseE.getItems().get(i).getEmployer().getName(),
-                        responseE.getItems().get(i).getSalary().getFrom(),
-                        responseE.getItems().get(i).getSalary().getTo(),
-                        responseE.getItems().get(i).getSalary().getCurrency(),
-                        Integer.parseInt(responseE.getItems().get(i).getArea().getId()),
-                        Integer.parseInt(responseE.getItems().get(i).getId()))
+                        response.getItems().get(i).getName(),
+                        response.getItems().get(i).getArea().getName(),
+                        response.getItems().get(i).getEmployer().getName(),
+                        response.getItems().get(i).getSalary().getFrom(),
+                        response.getItems().get(i).getSalary().getTo(),
+                        response.getItems().get(i).getSalary().getCurrency(),
+                        Integer.parseInt(response.getItems().get(i).getArea().getId()),
+                        Integer.parseInt(response.getItems().get(i).getId()))
                 );
                 counterIDs++;
                 if (counterIDs > 2000) break;
@@ -257,23 +258,23 @@ public class VacancyParser {
             //============================
             pagesCount = j+1;
             url = mainurl + "?per_page=" + 20 + "&page=" + j + "&text=" + name;
-            Models responseE = restTemplate.getForObject(url, Models.class);
-            Integer found = responseE.getFound();
+            Models response = restTemplate.getForObject(url, Models.class);
+            Integer found = response.getFound();
 
             if (j == countpages) icount = leftover;
             for (int i = 0; i < icount; i++) {
                 countProtector++;
-                if (responseE.getItems().get(i).getSalary().getFrom() == null && responseE.getItems().get(i).getSalary().getTo() == null) continue;
-                if (!responseE.getItems().get(i).getSalary().getCurrency().equals("RUR")) continue;
+                if (response.getItems().get(i).getSalary().getFrom() == null && response.getItems().get(i).getSalary().getTo() == null) continue;
+                if (!response.getItems().get(i).getSalary().getCurrency().equals("RUR")) continue;
                 parsedlist.add(new Vacancy(null, counterIDs,
-                        responseE.getItems().get(i).getName(),
-                        responseE.getItems().get(i).getArea().getName(),
-                        responseE.getItems().get(i).getEmployer().getName(),
-                        responseE.getItems().get(i).getSalary().getFrom(),
-                        responseE.getItems().get(i).getSalary().getTo(),
-                        responseE.getItems().get(i).getSalary().getCurrency(),
-                        Integer.parseInt(responseE.getItems().get(i).getArea().getId()),
-                        Integer.parseInt(responseE.getItems().get(i).getId()))
+                        response.getItems().get(i).getName(),
+                        response.getItems().get(i).getArea().getName(),
+                        response.getItems().get(i).getEmployer().getName(),
+                        response.getItems().get(i).getSalary().getFrom(),
+                        response.getItems().get(i).getSalary().getTo(),
+                        response.getItems().get(i).getSalary().getCurrency(),
+                        Integer.parseInt(response.getItems().get(i).getArea().getId()),
+                        Integer.parseInt(response.getItems().get(i).getId()))
                 );
                 counterIDs++;
                 if (counterIDs > 2000) break;
@@ -285,14 +286,5 @@ public class VacancyParser {
         System.out.println("Cicles: "+ pagesCount + " || Items: "+parsedlist.size());
         return ThreadParser.listOfVacancies;
     }
-
-
-//    public static Models getResponsE() {
-//        return responsE;
-//    }
-//
-//    public static void setResponsE(Models responsE) {
-//        VacancyParser.responsE = responsE;
-//    }
 }
 

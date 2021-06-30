@@ -24,18 +24,18 @@ public class ThreadParser extends Thread {
         if (VacancyParser.round == VacancyParser.countpages) VacancyParser.icount = VacancyParser.leftover; // ??
         for (int i = 0; i < VacancyParser.icount; i++) {
             VacancyParser.countProtector++;
-            if (VacancyParser.responseE.getItems().get(i).getSalary().getFrom() == null && VacancyParser.responseE.getItems().get(i).getSalary().getTo() == null) continue;
-            if (!VacancyParser.responseE.getItems().get(i).getSalary().getCurrency().equals("RUR")) continue;
+            if (VacancyParser.response.getItems().get(i).getSalary().getFrom() == null && VacancyParser.response.getItems().get(i).getSalary().getTo() == null) continue;
+            if (!VacancyParser.response.getItems().get(i).getSalary().getCurrency().equals("RUR")) continue;
             integercountVacancy++;
             listOfVacancies.add(new Vacancy(null, ThreadParser.counterIDs,
-                    VacancyParser.responseE.getItems().get(i).getName(),
-                    VacancyParser.responseE.getItems().get(i).getEmployer().getName(),
-                    VacancyParser.responseE.getItems().get(i).getArea().getName(),
-                    VacancyParser.responseE.getItems().get(i).getSalary().getFrom(),
-                    VacancyParser.responseE.getItems().get(i).getSalary().getTo(),
-                    VacancyParser.responseE.getItems().get(i).getSalary().getCurrency(),
-                    Integer.parseInt(VacancyParser.responseE.getItems().get(i).getArea().getId()),
-                    Integer.parseInt(VacancyParser.responseE.getItems().get(i).getId()))
+                    VacancyParser.response.getItems().get(i).getName(),
+                    VacancyParser.response.getItems().get(i).getEmployer().getName(),
+                    VacancyParser.response.getItems().get(i).getArea().getName(),
+                    VacancyParser.response.getItems().get(i).getSalary().getFrom(),
+                    VacancyParser.response.getItems().get(i).getSalary().getTo(),
+                    VacancyParser.response.getItems().get(i).getSalary().getCurrency(),
+                    Integer.parseInt(VacancyParser.response.getItems().get(i).getArea().getId()),
+                    Integer.parseInt(VacancyParser.response.getItems().get(i).getId()))
             );
 
             ThreadParser.counterIDs++;
