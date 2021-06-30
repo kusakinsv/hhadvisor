@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.util.ClassUtils;
+import ru.one.hhadvisor.program.DBWriter;
 
 import javax.sql.DataSource;
 import java.lang.reflect.InvocationTargetException;
@@ -19,6 +20,10 @@ import java.sql.Driver;
 @PropertySource("classpath:application.properties")
 @EnableJpaRepositories
 public class Configuration {
+    @Bean
+    public DBWriter writerBean(){
+        return new DBWriter();
+    }
 
 
 

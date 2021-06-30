@@ -17,11 +17,15 @@ import java.util.List;
 public class DBWriter {
     public static Vacancy vacancy;
     public static int writecounter = 0;
-    private final ThreadSaver threadSaver;
 
     @Autowired
-    public DBWriter(ThreadSaver threadSaver){
-        this.threadSaver = threadSaver;
+ private ThreadSaver threadSaver;
+
+
+
+
+    public DBWriter() {
+
     }
 //    @Autowired
 //    public ThreadSaverRepo threadSaverRepo;
