@@ -1,11 +1,13 @@
 package ru.one.hhadvisor.controller;
 
 
+import org.hibernate.stat.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.one.hhadvisor.entity.repos.VacancyRepo;
 import ru.one.hhadvisor.output.Vacancy;
 import ru.one.hhadvisor.program.JsonAreas;
+import ru.one.hhadvisor.program.statistics.MinMaxStat;
 import ru.one.hhadvisor.program.threads.ThreadSaver;
 import ru.one.hhadvisor.services.VacancyParser;
 
@@ -52,40 +54,35 @@ public class Controller {
 //    }
 
     @GetMapping("search") //  Погружение в БД
-    public HashMap<String, String> searchParams(@RequestParam(value = "name", required = false) String name,
+    public MinMaxStat searchParams(@RequestParam(value = "name", required = false) String name,
                                                 @RequestParam(value = "area", required = false) Integer area
     ) throws SQLException, InterruptedException {
-
         VacancyParser parser = new VacancyParser();
+        MinMaxStat stat = new MinMaxStat();
         if (name == null && area == null) {
             System.out.println("Error: no parameters");
-            return new HashMap<String, String>() {{
-                put("system", "no parameters");
-            }};
+            return stat;
         } else if (area == null) {
             List<Vacancy> vacancies = parser.doParse(name);
             // vacancyRepo.saveAll(vacancies);
             System.out.println("DB operations complete");
-            return new HashMap<String, String>() {{
-                put("system", "operation complete");
-            }};
+            return stat;
         } else if (name == null) {
             List<Vacancy> vacancies = parser.doParse(area);
             //  vacancyRepo.saveAll(vacancies);
             System.out.println("DB operations complete");
-            return new HashMap<String, String>() {{
-                put("system", "operation complete");
-            }};
+            return stat;
         } else {
             List<Vacancy> vacancies = parser.doParseWithAreas(name, area);
             System.out.println("DB write operations....");
+
+            stat.doStat(vacancies);
+
             vacancyRepo.saveAll(vacancies);
             //DBWriter.toWrite(vacancies);
             System.out.println("TOTAL " + ThreadSaver.vacancyListFoeDBSaver.size());
             System.out.println("DB operations complete");
-            return new HashMap<String, String>() {{
-                put("system", "operation complete");
-            }};}
+            return stat;}
     }
 
 

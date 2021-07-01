@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 public class VacancyParser {
-    private static int counter = 2000;
+    private static int counter = 100;
     //    public static RestTemplate restTemplate;
     public static final String mainurl = "https://api.hh.ru/vacancies";
 
@@ -27,12 +27,30 @@ public class VacancyParser {
     public static int leftover = 0;
     public static int round = 0;
     public static Models response;
+    public List<Vacancy> vacloc1 = new ArrayList<>();
+    public static List<Vacancy> unionvaclist = new ArrayList<>();
+    public VacancyParser(List<Vacancy> vacloc1) {
+        this.vacloc1 = vacloc1;
+    }
 
+    public void doPutListVac(List<Vacancy> a){
+        unionvaclist.addAll(a);
+    }
+    public void doUnionHere(Vacancy v, int i){
+        vacloc1.add(v);
+        if (i == VacancyParser.icount-1) doPutListVac(vacloc1);
 
+    }
 
     RestTemplate restTemplate = new RestTemplate();
 
+    public VacancyParser() {
+
+    }
+
     public List<Vacancy> doParseWithAreas(String name, int area) throws SQLException, InterruptedException {
+
+        List<Vacancy> vacloc2 = new ArrayList<>();
         VacancyParser.area = area;
         VacancyParser.name = name;
         TableCleaner tc = new TableCleaner();
@@ -98,8 +116,13 @@ public class VacancyParser {
 
         //===============================================
        // System.out.println("Размер: " + ThreadParser.getListOfVacancies().size());
-        return ThreadParser.getListOfVacancies();
+        return unionvaclist;
     }
+
+//    public void unionList(List<Vacancy> one, List<Vacancy> two){
+//    one.addAll(two);
+
+
 
 //=== раб осн
 //    public List<Vacancy> doParseWithAreas(String name, int area) throws SQLException {
@@ -292,6 +315,14 @@ public class VacancyParser {
         System.out.println("counterIDs: " + counterIDs + "|| countProtector:" + countProtector);
         System.out.println("Cicles: "+ pagesCount + " || Items: "+parsedlist.size());
         return ThreadParser.listOfVacancies;
+    }
+
+    public List<Vacancy> getVacloc1() {
+        return vacloc1;
+    }
+
+    public void setVacloc1(List<Vacancy> vacloc1) {
+        this.vacloc1 = vacloc1;
     }
 }
 
