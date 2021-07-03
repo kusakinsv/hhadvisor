@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 public class VacancyParser {
-    private static int counter = 100;
+    private static int counter = 200;
     //    public static RestTemplate restTemplate;
     public static final String mainurl = "https://api.hh.ru/vacancies";
 

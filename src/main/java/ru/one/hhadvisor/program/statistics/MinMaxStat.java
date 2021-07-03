@@ -57,21 +57,23 @@ public class MinMaxStat {
         int totalInterval = salarymax - salarymin;
         int serialInterval = totalInterval/6;
         column1r = salarymin+serialInterval;
-        column2l = column1l+serialInterval;
+        column2l = column1r;
         column2r = column2l+serialInterval;
-        column3l = column2r+serialInterval;
+        column3l = column2r;
         column3r = column3l+serialInterval;
-        column4l = column3r+serialInterval;
+        column4l = column3r;
         column4r = column4l+serialInterval;
-        column5l = column4r+serialInterval;
+        column5l = column4r;
         column5r = column5l+serialInterval;
-        column6l = column5r+serialInterval;
-        column6r = column5l+serialInterval;
+        column6l = column5r;
+        column6r = 0;//column6l+serialInterval;
         List<Integer> middleSalaruList = new ArrayList<>();
+        List<Integer> forMedianCount = new ArrayList<>();
         for (Vacancy v :vacancyList) {
             if (v.getSalaryFrom() != null && v.getSalaryTo() != null) {
                 int middleSalary = (v.getSalaryFrom() + v.getSalaryTo()) / 2;
                 middleSalaruList.add(middleSalary);
+
             }
             if (v.getSalaryFrom() == null && v.getSalaryTo() != null) {
                 int middleSalary = v.getSalaryTo();
@@ -91,7 +93,43 @@ public class MinMaxStat {
                 if (i  > column5l && i < column5r ) column5Count++;
                 if (i  > column6l) column6Count++;
                          }
-        mediana = (column3Count + column4Count)/2;
+
+        List<Integer> medianlist = new ArrayList<>();
+//        for (int i = 1; i < 7; i++) {
+//            String countsL = "column" + i + "l";
+//            String countsR = "column" + i + "r";
+//            String countsC= "column" + i + "C";
+//
+//        }
+        for (int i = 0; i < column1Count ; i++) {
+            medianlist.add((column1l+column1r)/2);
+        }
+        for (int i = 0; i < column2Count ; i++) {
+            medianlist.add((column2l+column2r)/2);
+        }
+        for (int i = 0; i < column3Count ; i++) {
+            medianlist.add((column3l+column3r)/2);
+        }
+        for (int i = 0; i < column4Count ; i++) {
+            medianlist.add((column4l+column4r)/2);
+        }
+        for (int i = 0; i < column5Count ; i++) {
+            medianlist.add((column5l+column5r)/2);
+        }
+        for (int i = 0; i < column6Count ; i++) {
+            medianlist.add((column6l+column6r)/2);
+        }
+
+        if (medianlist.size()%2 == 0){
+            int middle = medianlist.size()/2;
+          mediana = (medianlist.get(middle)+medianlist.get(middle+1))/2;
+        } else {
+            int middle = (medianlist.size()-1)/2+1;
+            mediana = medianlist.get(middle);
+        }
+
+
+       // mediana = (column3Count + column4Count)/2;
         salaryFrom = salarymin;
         salaryTo = salarymax;
         column1s = "до " + column1r + " руб.";
@@ -99,14 +137,11 @@ public class MinMaxStat {
         column3s = "от " + column3l + " до " + column3r + " руб.";
         column4s = "от " + column4l + " до " + column4r + " руб.";
         column5s = "от " + column5l + " до " + column1r + " руб.";
-        column6s = "от " + column6l + " руб.";
+        column6s = "свыше " + column6l + " руб.";
 
 
-
-
-
-
-
+        //forMedianCount.add();
+        //forMedianCount.add();
 
 
         System.out.println("STAT COMPLETE");

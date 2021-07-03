@@ -82,7 +82,8 @@ public class Controller {
             //DBWriter.toWrite(vacancies);
             System.out.println("TOTAL " + ThreadSaver.vacancyListFoeDBSaver.size());
             System.out.println("DB operations complete");
-            return stat;}
+            return stat;
+           }
     }
 
 

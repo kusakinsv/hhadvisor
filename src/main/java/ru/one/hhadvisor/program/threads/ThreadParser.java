@@ -31,7 +31,7 @@ public class ThreadParser extends Thread {
         for (int i = 0; i < VacancyParser.icount; i++) {
         //    Models response = restTemplate.getForObject(url, Models.class);
             VacancyParser.countProtector++;
-//            if (VacancyParser.response.getItems().get(i).getSalary().getFrom() == null && VacancyParser.response.getItems().get(i).getSalary().getTo() == null) continue;
+           // if (VacancyParser.response.getItems().get(i).getSalary().getFrom() == null && VacancyParser.response.getItems().get(i).getSalary().getTo() == null) continue;
             if (VacancyParser.response.getItems().get(i).getSalary().getFrom() == null || VacancyParser.response.getItems().get(i).getSalary().getTo() == null) continue;
             if (!VacancyParser.response.getItems().get(i).getSalary().getCurrency().equals("RUR")) continue;
             integercountVacancy++;

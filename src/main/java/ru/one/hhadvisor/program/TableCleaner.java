@@ -8,12 +8,13 @@ import java.util.Properties;
 
 public class TableCleaner {
     public void truncate(String tableName) throws SQLException {
-        String url = "jdbc:postgresql://35.238.106.186/springdatabase";
+        String url = "jdbc:postgresql://springdatabase.cjgtmemkygoe.us-east-2.rds.amazonaws.com/springdatabase";
         Properties props = new Properties();
-        props.setProperty("user","admin");
+        props.setProperty("user","administrator");
         props.setProperty("password","123450000");
         props.setProperty("ssl","false");
         Connection conn = DriverManager.getConnection(url, props);
+        System.out.println("----------------");
         System.out.println("Truncating table " + tableName + "...");
         Statement stmt = conn.createStatement();
         String query = "Truncate table " + tableName;
