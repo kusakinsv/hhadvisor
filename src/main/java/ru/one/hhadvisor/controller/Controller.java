@@ -13,7 +13,6 @@ import ru.one.hhadvisor.services.VacancyParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -55,8 +54,10 @@ public class Controller {
 
     @GetMapping("search") //  Погружение в БД
     public MinMaxStat searchParams(@RequestParam(value = "name", required = false) String name,
-                                                @RequestParam(value = "area", required = false) Integer area
+                                   @RequestParam(value = "area", required = false) Integer area
     ) throws SQLException, InterruptedException {
+
+
         VacancyParser parser = new VacancyParser();
         MinMaxStat stat = new MinMaxStat();
         if (name == null && area == null) {
@@ -64,12 +65,12 @@ public class Controller {
             return stat;
         } else if (area == null) {
             List<Vacancy> vacancies = parser.doParse(name);
-            // vacancyRepo.saveAll(vacancies);
+            vacancyRepo.saveAll(vacancies);
             System.out.println("DB operations complete");
             return stat;
         } else if (name == null) {
             List<Vacancy> vacancies = parser.doParse(area);
-            //  vacancyRepo.saveAll(vacancies);
+            vacancyRepo.saveAll(vacancies);
             System.out.println("DB operations complete");
             return stat;
         } else {
@@ -101,34 +102,34 @@ public class Controller {
 //        return jsonAreas.testTakeAreas();
 //    }
 
-    @RequestMapping("test")
-    public  List<Map<String, String>> testResponse(){
-        List<Map<String, String>> messages = new ArrayList<Map<String, String>>() {{
-            add(new HashMap<String, String>() {{
-                put("id", "1");
-                put("text", "First Message");
-            }});
-            add(new HashMap<String, String>() {{
-                put("id", "2");
-                put("text", "Second Message");
-            }});
-            add(new HashMap<String, String>() {{
-                put("id", "3");
-                put("text", "Third Message");
-            }});
-        }};
-        return messages;
-    }
+//    @RequestMapping("test")
+//    public  List<Map<String, String>> testResponse(){
+//        List<Map<String, String>> messages = new ArrayList<Map<String, String>>() {{
+//            add(new HashMap<String, String>() {{
+//                put("id", "1");
+//                put("text", "First Message");
+//            }});
+//            add(new HashMap<String, String>() {{
+//                put("id", "2");
+//                put("text", "Second Message");
+//            }});
+//            add(new HashMap<String, String>() {{
+//                put("id", "3");
+//                put("text", "Third Message");
+//            }});
+//        }};
+//        return messages;
+//    }
     @GetMapping("/areas2")
     public File getAreasInJson2() throws FileNotFoundException {
         JsonAreas jsonAreas = new JsonAreas();
         return new File("java/other/areas.json");
     }
-    @RequestMapping("/name=Java")//тест
-    public List<Vacancy> getString() {
-        VacancyParser parser = new VacancyParser();
-        return parser.doParse(testurl);
-    }
+//    @RequestMapping("/name=Java")//тест
+//    public List<Vacancy> getString() throws InterruptedException {
+//        VacancyParser parser = new VacancyParser();
+//        return parser.doParse(testurl);
+//    }
 }
 
 //    @GetMapping("/areas")

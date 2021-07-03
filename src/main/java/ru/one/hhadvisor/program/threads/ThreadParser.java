@@ -1,11 +1,9 @@
 package ru.one.hhadvisor.program.threads;
 
-import org.springframework.stereotype.Service;
+
 import org.springframework.web.client.RestTemplate;
 import ru.one.hhadvisor.output.Vacancy;
-import ru.one.hhadvisor.program.exp.Experience;
 import ru.one.hhadvisor.program.exp.ModelForExperience;
-import ru.one.hhadvisor.program.model.Models;
 import ru.one.hhadvisor.services.VacancyParser;
 
 import java.util.ArrayList;
@@ -17,6 +15,8 @@ public class ThreadParser extends Thread {
     public static int integercountVacancy = 0;
     public static int threadCounter = 0;
     public static int counterIDs = 1; //default = 1
+    private int USD = 72;
+    private int EUR = 86;
     //Vacancy vacloc = new Vacancy();
     final String expurl = "https://api.hh.ru/vacancies/";
     RestTemplate restTemplate = new RestTemplate();
@@ -24,18 +24,17 @@ public class ThreadParser extends Thread {
 
 
     @Override
-    public synchronized void run() {
+    public void run() {
         System.out.println("Начинаю поиск " + getName());
 
         if (VacancyParser.round == VacancyParser.countpages) VacancyParser.icount = VacancyParser.leftover; // ??
         for (int i = 0; i < VacancyParser.icount; i++) {
         //    Models response = restTemplate.getForObject(url, Models.class);
             VacancyParser.countProtector++;
-           // if (VacancyParser.response.getItems().get(i).getSalary().getFrom() == null && VacancyParser.response.getItems().get(i).getSalary().getTo() == null) continue;
-            if (VacancyParser.response.getItems().get(i).getSalary().getFrom() == null || VacancyParser.response.getItems().get(i).getSalary().getTo() == null) continue;
+           if (VacancyParser.response.getItems().get(i).getSalary().getFrom() == null && VacancyParser.response.getItems().get(i).getSalary().getTo() == null) continue;
+            //if (VacancyParser.response.getItems().get(i).getSalary().getFrom() == null || VacancyParser.response.getItems().get(i).getSalary().getTo() == null) continue;
             if (!VacancyParser.response.getItems().get(i).getSalary().getCurrency().equals("RUR")) continue;
             integercountVacancy++;
-            //List<Vacancy> localVacList = new ArrayList<>();
             Vacancy localvac = new Vacancy(null, ThreadParser.counterIDs,
                     VacancyParser.response.getItems().get(i).getName(),
                     VacancyParser.response.getItems().get(i).getEmployer().getName(),
@@ -55,6 +54,19 @@ public class ThreadParser extends Thread {
             assert responseExp != null;
             localvac.setExperienceId(responseExp.getExperience().getId());
             localvac.setExperienceName(responseExp.getExperience().getName());
+            //======== конвертер валюты
+            if (localvac.getSalaryCurrency().equals("USD")){
+                localvac.setSalaryCurrency("RUR");
+                localvac.setSalaryFrom(localvac.getSalaryFrom()*USD);
+                localvac.setSalaryTo(localvac.getSalaryTo()*USD);
+            }
+            if (localvac.getSalaryCurrency().equals("EUR")){
+                localvac.setSalaryCurrency("RUR");
+                localvac.setSalaryFrom(localvac.getSalaryFrom()*EUR);
+                localvac.setSalaryTo(localvac.getSalaryTo()*EUR);
+            }
+
+
             VacancyParser.unionvaclist.add(localvac);
             ThreadParser.counterIDs++;
             if (ThreadParser.counterIDs > 2000) break;
@@ -63,6 +75,7 @@ public class ThreadParser extends Thread {
 
         System.out.println("Поток " +getName()+ " завершен");
         threadCounter++;
+        stop();
     }
 
     public static List<Vacancy> getListOfVacancies() {

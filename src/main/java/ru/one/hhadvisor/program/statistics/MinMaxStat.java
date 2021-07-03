@@ -45,16 +45,17 @@ public class MinMaxStat {
         int salarymax = Integer.MIN_VALUE;;
         for (Vacancy v :vacancyList) {
             if (v.getSalaryFrom() != null) {
-                if (v.getSalaryFrom()   < salarymin) salarymin = v.getSalaryFrom();
+                if (v.getSalaryFrom()   < salarymin) salarymin = roundThousand(v.getSalaryFrom()); //v.getSalaryFrom();
 
                 countermin++;
             }
-            if (v.getSalaryFrom() != null) {
-                if (v.getSalaryTo() > salarymax) salarymax = v.getSalaryTo();
+            if (v.getSalaryTo() != null) {
+                if (v.getSalaryTo() > salarymax) salarymax =  roundThousand(v.getSalaryTo()); //v.getSalaryTo();
                 countermax++;
             }
                                 }
         int totalInterval = salarymax - salarymin;
+     //   System.out.println(salarymin +  " || " + salarymax );
         int serialInterval = totalInterval/6;
         column1r = salarymin+serialInterval;
         column2l = column1r;
@@ -72,16 +73,16 @@ public class MinMaxStat {
         for (Vacancy v :vacancyList) {
             if (v.getSalaryFrom() != null && v.getSalaryTo() != null) {
                 int middleSalary = (v.getSalaryFrom() + v.getSalaryTo()) / 2;
-                middleSalaruList.add(middleSalary);
+                middleSalaruList.add(roundThousand(middleSalary));
 
             }
             if (v.getSalaryFrom() == null && v.getSalaryTo() != null) {
                 int middleSalary = v.getSalaryTo();
-                middleSalaruList.add(middleSalary);
+                middleSalaruList.add(roundThousand(middleSalary));
             }
             if (v.getSalaryFrom() != null && v.getSalaryTo() == null) {
                 int middleSalary = v.getSalaryFrom();
-                middleSalaruList.add(middleSalary);
+                middleSalaruList.add(roundThousand(middleSalary));
 
             }
         }
@@ -95,12 +96,6 @@ public class MinMaxStat {
                          }
 
         List<Integer> medianlist = new ArrayList<>();
-//        for (int i = 1; i < 7; i++) {
-//            String countsL = "column" + i + "l";
-//            String countsR = "column" + i + "r";
-//            String countsC= "column" + i + "C";
-//
-//        }
         for (int i = 0; i < column1Count ; i++) {
             medianlist.add((column1l+column1r)/2);
         }
@@ -129,21 +124,15 @@ public class MinMaxStat {
         }
 
 
-       // mediana = (column3Count + column4Count)/2;
+
         salaryFrom = salarymin;
         salaryTo = salarymax;
-        column1s = "до " + column1r + " руб.";
-        column2s = "от " + column2l + " до " + column2r + " руб.";
-        column3s = "от " + column3l + " до " + column3r + " руб.";
-        column4s = "от " + column4l + " до " + column4r + " руб.";
-        column5s = "от " + column5l + " до " + column1r + " руб.";
-        column6s = "свыше " + column6l + " руб.";
-
-
-        //forMedianCount.add();
-        //forMedianCount.add();
-
-
+        column1s = "до " + column1r + " т.р.";
+        column2s = "от " + column2l + " до " + column2r + " т.р.";
+        column3s = "от " + column3l + " до " + column3r + " т.р.";
+        column4s = "от " + column4l + " до " + column4r + " т.р.";
+        column5s = "от " + column5l + " до " + column5r + " т.р.";
+        column6s = "свыше " + column6l + " т.р.";
         System.out.println("STAT COMPLETE");
 
 
@@ -382,5 +371,14 @@ public class MinMaxStat {
 
     public void setMediana(int mediana) {
         this.mediana = mediana;
+    }
+    public int roundThousand(int a){
+        double d = Double.parseDouble(""+a);
+        double z = (int) a;
+        z = Math.round(z*0.001);
+        a = (int) z;
+        //System.out.println(a);
+        return a;
+
     }
 }
