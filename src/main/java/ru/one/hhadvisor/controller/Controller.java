@@ -3,6 +3,7 @@ package ru.one.hhadvisor.controller;
 
 import org.hibernate.stat.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.one.hhadvisor.entity.repos.VacancyRepo;
 import ru.one.hhadvisor.output.Vacancy;
@@ -53,41 +54,48 @@ public class Controller {
 //    }
 
     @GetMapping("search") //  Погружение в БД
-    public MinMaxStat searchParams(@RequestParam(value = "name", required = false) String name,
-                                   @RequestParam(value = "area", required = false) Integer area
+    public ResponseEntity searchParams(@RequestParam(value = "name", required = false) String name,
+                                   @RequestParam(value = "area", required = false) String area
     ) throws SQLException, InterruptedException {
-
-
         VacancyParser parser = new VacancyParser();
         MinMaxStat stat = new MinMaxStat();
+        boolean b;
         if (name == null && area == null) {
             System.out.println("Error: no parameters");
-            return stat;
+            return ResponseEntity.ok(new HashMap<String, String>() {{
+                put("system", "no parameters");
+            }});
         } else if (area == null) {
-            List<Vacancy> vacancies = parser.doParse(name);
+            List<Vacancy> vacancies = parser.doParseWithName(name);
+
+            System.out.println("DB write operations....");
+            stat.doStat(vacancies);
             vacancyRepo.saveAll(vacancies);
             System.out.println("DB operations complete");
-            return stat;
+            return ResponseEntity.ok(stat);
         } else if (name == null) {
-            List<Vacancy> vacancies = parser.doParse(area);
+            List<Vacancy> vacancies = parser.doParseWithArea(area);
+            stat.doStat(vacancies);
+            System.out.println("DB write operations....");
             vacancyRepo.saveAll(vacancies);
             System.out.println("DB operations complete");
-            return stat;
+            return ResponseEntity.ok(stat);
         } else {
             List<Vacancy> vacancies = parser.doParseWithAreas(name, area);
-            System.out.println("DB write operations....");
-
             stat.doStat(vacancies);
-
+            System.out.println("DB write operations....");
             vacancyRepo.saveAll(vacancies);
             //DBWriter.toWrite(vacancies);
-            System.out.println("TOTAL " + ThreadSaver.vacancyListFoeDBSaver.size());
+            //System.out.println("TOTAL " + ThreadSaver.vacancyListFoeDBSaver.size());
             System.out.println("DB operations complete");
-            return stat;
+            return ResponseEntity.ok(stat);
            }
     }
 
-
+    @GetMapping("test2") //================Спрятал на время теста
+    public ResponseEntity test2() {
+        return ResponseEntity.ok("no parameters");
+    }
     @GetMapping("take") //================Спрятал на время теста
     public List<Vacancy> take() {
         return StreamSupport

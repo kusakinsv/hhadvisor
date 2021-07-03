@@ -45,17 +45,25 @@ public class MinMaxStat {
         int salarymax = Integer.MIN_VALUE;;
         for (Vacancy v :vacancyList) {
             if (v.getSalaryFrom() != null) {
-                if (v.getSalaryFrom()   < salarymin) salarymin = roundThousand(v.getSalaryFrom()); //v.getSalaryFrom();
-
+                if (v.getSalaryFrom() < salarymin) salarymin = v.getSalaryFrom();//roundThousand(v.getSalaryFrom()); //v.getSalaryFrom();
                 countermin++;
             }
             if (v.getSalaryTo() != null) {
-                if (v.getSalaryTo() > salarymax) salarymax =  roundThousand(v.getSalaryTo()); //v.getSalaryTo();
+                if (v.getSalaryTo() > salarymax) salarymax =  v.getSalaryTo();//roundThousand(v.getSalaryTo()); //v.getSalaryTo();
                 countermax++;
             }
+//            if (salarymin > salarymax) {
+//                int x = salarymax;
+//                salarymax = salarymin;
+//                salarymin = x;
+//                countermax++;
+//                countermin--;
+//            }
                                 }
+        salarymin = roundThousand(salarymin);
+        salarymax = roundThousand(salarymax);
         int totalInterval = salarymax - salarymin;
-     //   System.out.println(salarymin +  " || " + salarymax );
+     System.out.println(salarymin +  " || " + salarymax );
         int serialInterval = totalInterval/6;
         column1r = salarymin+serialInterval;
         column2l = column1r;

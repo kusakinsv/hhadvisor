@@ -32,7 +32,7 @@ public class ThreadParser extends Thread {
         //    Models response = restTemplate.getForObject(url, Models.class);
             VacancyParser.countProtector++;
            if (VacancyParser.response.getItems().get(i).getSalary().getFrom() == null && VacancyParser.response.getItems().get(i).getSalary().getTo() == null) continue;
-            //if (VacancyParser.response.getItems().get(i).getSalary().getFrom() == null || VacancyParser.response.getItems().get(i).getSalary().getTo() == null) continue;
+           // if (VacancyParser.response.getItems().get(i).getSalary().getFrom() == null || VacancyParser.response.getItems().get(i).getSalary().getTo() == null) continue;
             if (!VacancyParser.response.getItems().get(i).getSalary().getCurrency().equals("RUR")) continue;
             integercountVacancy++;
             Vacancy localvac = new Vacancy(null, ThreadParser.counterIDs,

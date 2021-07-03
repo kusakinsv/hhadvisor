@@ -20,17 +20,24 @@ public class VacancyParser {
 
     public static int countpages = 1; //default = 1
     public static String name;
-    public static int area;
+    public static String area;
     public static int icount;
     public static int countProtector = 1;
     public static int leftover = 0;
     public static int round = 0;
     public static Models response;
+    public static String superUrl = "https://api.hh.ru/vacancies";
+    public static String subarea = "";
+    public static String subname = "";
+    public static int subid = 0;
+
+
+
     public List<Vacancy> vacloc1 = new ArrayList<>();
     public static List<Vacancy> unionvaclist = new ArrayList<>();
     public VacancyParser(List<Vacancy> vacloc1) {
         this.vacloc1 = vacloc1;
-    }
+     }
 
     public void doPutListVac(List<Vacancy> a){
         unionvaclist.addAll(a);
@@ -47,7 +54,7 @@ public class VacancyParser {
 
     }
 
-    public List<Vacancy> doParseWithAreas(String name, int area) throws SQLException, InterruptedException {
+    public List<Vacancy> doParseWithAreas(String name, String area) throws SQLException, InterruptedException {
 
         List<Vacancy> vacloc2 = new ArrayList<>();
         VacancyParser.area = area;
@@ -110,10 +117,15 @@ public class VacancyParser {
         countProtector = 1;
         leftover = 0;
         round = 0;
+        VacancyParser.area = "";
+        VacancyParser.name = "";
         return unionvaclist;
     }
 
-    public List<Vacancy> doParse(int area) throws InterruptedException {
+    public List<Vacancy> doParseWithArea(String area) throws InterruptedException, SQLException {
+        VacancyParser.area = area;
+        TableCleaner tc = new TableCleaner();
+        tc.truncate("vacancy");
         System.out.println("Count:" + counter + " || Area: " + area);
         if (counter > 2000) counter = 2000;
         String url = mainurl + "?per_page=" + 1 + "&page=" + 0 + "&area=" + area;
@@ -168,10 +180,15 @@ public class VacancyParser {
         countProtector = 1;
         leftover = 0;
         round = 0;
+        VacancyParser.area = "";
+        VacancyParser.name = "";
         return unionvaclist;
-    }
+       }
 
-    public List<Vacancy> doParse(String name) throws InterruptedException {
+    public List<Vacancy> doParseWithName(String name) throws InterruptedException, SQLException {
+        VacancyParser.name = name;
+        TableCleaner tc = new TableCleaner();
+        tc.truncate("vacancy");
         System.out.println("Text:" + name + " || Count:" + counter);
         if (counter > 2000) counter = 2000;
         String url = mainurl + "?per_page=" + 1 + "&page=" + 0 + "&text=" + name;
@@ -198,11 +215,12 @@ public class VacancyParser {
 
 
         for (int j = 0; j <= countpages; j++) {
-            url = VacancyParser.mainurl + "?per_page=" + 20 + "&page=" + VacancyParser.round + "&text=" + VacancyParser.name + "&area=" + VacancyParser.area;
+            url = VacancyParser.mainurl + "?per_page=" + 20 + "&page=" + VacancyParser.round + "&text=" + VacancyParser.name;
+           // url = mainurl + "?per_page=" + 20 + "&page=" + j + "&text=" + name;
             response = restTemplate.getForObject(url, Models.class);
             round = j;
             ThreadParser tp = new ThreadParser();
-            tp.start();
+            tp.run();
             pagesCount = j+1;
 //            if (counterIDs >= 2000) break;
 //            if (countProtector >= 2000) break;
@@ -230,6 +248,8 @@ public class VacancyParser {
         countProtector = 1;
         leftover = 0;
         round = 0;
+        VacancyParser.area = "";
+        VacancyParser.name = "";
         return unionvaclist;
     }
     public List<Vacancy> getVacloc1() {

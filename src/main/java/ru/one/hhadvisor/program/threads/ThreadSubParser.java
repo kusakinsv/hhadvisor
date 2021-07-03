@@ -1,3 +1,30 @@
+//for (Vacancy v : vacancyList) {
+//        if (v.getSalaryFrom() != null) {
+//        if (v.getSalaryFrom() > salarymax) {
+//        salarymax = v.getSalaryFrom();
+//        countermax++;
+//        } else {
+//        if (v.getSalaryFrom() < salarymin)
+//        salarymin = roundThousand(v.getSalaryFrom()); //v.getSalaryFrom();
+//        countermin++;
+//        }
+//        }
+//        if (v.getSalaryTo() != null) {
+//        if (v.getSalaryTo() < salarymin) {
+//        salarymin = v.getSalaryTo();
+//        countermin++;
+//        } else {
+//        if (v.getSalaryTo() > salarymax) salarymax = roundThousand(v.getSalaryTo()); //v.getSalaryTo();
+//        countermax++;
+//        }
+//        }
+
+
+
+
+
+
+
 //package ru.one.hhadvisor.program.threads;
 //
 //import org.springframework.web.client.RestTemplate;
