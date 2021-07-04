@@ -2,12 +2,10 @@ package ru.one.hhadvisor.program.threads;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 
 import ru.one.hhadvisor.entity.repos.ThreadSaverRepo;
-import ru.one.hhadvisor.entity.repos.VacancyRepo;
 import ru.one.hhadvisor.output.Vacancy;
 import ru.one.hhadvisor.program.DBWriter;
 
@@ -26,7 +24,6 @@ public class ThreadSaver extends Thread{
         System.out.println("Поток записи открыт " + getName());
         System.out.println(DBWriter.writecounter);
         System.out.println(vacancyListFoeDBSaver.get(DBWriter.writecounter).getName());
-        //threadSaverRepo.save(ThreadSaver.vacancyListFoeDBSaver.get(0));
         threadSaverRepo.save(vacancyListFoeDBSaver.get(DBWriter.writecounter));
         threadCounter++;
         System.out.println("Поток завершен " +getName());

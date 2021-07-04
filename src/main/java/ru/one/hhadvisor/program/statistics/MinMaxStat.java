@@ -1,10 +1,7 @@
 package ru.one.hhadvisor.program.statistics;
 
-import org.springframework.beans.factory.support.ManagedList;
-import ru.one.hhadvisor.output.Vacancy;
-import ru.one.hhadvisor.program.exp.Experience;
-import ru.one.hhadvisor.services.VacancyParser;
 
+import ru.one.hhadvisor.output.Vacancy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,13 +49,6 @@ public class MinMaxStat {
                 if (v.getSalaryTo() > salarymax) salarymax =  v.getSalaryTo();//roundThousand(v.getSalaryTo()); //v.getSalaryTo();
                 countermax++;
             }
-//            if (salarymin > salarymax) {
-//                int x = salarymax;
-//                salarymax = salarymin;
-//                salarymin = x;
-//                countermax++;
-//                countermin--;
-//            }
                                 }
         salarymin = roundThousand(salarymin);
         salarymax = roundThousand(salarymax);
@@ -385,7 +375,6 @@ public class MinMaxStat {
         double z = (int) a;
         z = Math.round(z*0.001);
         a = (int) z;
-        //System.out.println(a);
         return a;
 
     }

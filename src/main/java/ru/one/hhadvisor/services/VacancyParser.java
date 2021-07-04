@@ -152,7 +152,7 @@ public class VacancyParser {
 
 
         for (int j = 0; j <= countpages; j++) {
-            url = VacancyParser.mainurl + "?per_page=" + 20 + "&page=" + VacancyParser.round + "&text=" + VacancyParser.name + "&area=" + VacancyParser.area;
+            url = VacancyParser.mainurl + "?per_page=" + 20 + "&page=" + VacancyParser.round + "&area=" + VacancyParser.area;
             response = restTemplate.getForObject(url, Models.class);
             round = j;
             ThreadParser tp = new ThreadParser();

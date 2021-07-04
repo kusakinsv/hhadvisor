@@ -1,3 +1,7 @@
+
+//============  Наброски на будущую реализацию суб-потоков для ускорения поиска
+
+
 //for (Vacancy v : vacancyList) {
 //        if (v.getSalaryFrom() != null) {
 //        if (v.getSalaryFrom() > salarymax) {
@@ -18,10 +22,6 @@
 //        countermax++;
 //        }
 //        }
-
-
-
-
 
 
 

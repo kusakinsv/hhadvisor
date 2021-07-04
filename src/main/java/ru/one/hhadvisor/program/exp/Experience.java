@@ -2,7 +2,6 @@ package ru.one.hhadvisor.program.exp;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import ru.one.hhadvisor.program.NullableExperience;
-import ru.one.hhadvisor.program.NullableSalary;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Experience {

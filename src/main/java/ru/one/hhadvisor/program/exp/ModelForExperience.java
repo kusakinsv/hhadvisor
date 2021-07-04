@@ -1,7 +1,6 @@
 package ru.one.hhadvisor.program.exp;
 
 import ru.one.hhadvisor.program.NullableExperience;
-import ru.one.hhadvisor.program.NullableSalary;
 
 public class ModelForExperience {
     private Experience experience;

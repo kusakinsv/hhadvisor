@@ -2,16 +2,6 @@ package ru.one.hhadvisor;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.client.RestTemplate;
-import ru.one.hhadvisor.output.Vacancy;
-import ru.one.hhadvisor.program.NullableSalary;
-import ru.one.hhadvisor.program.model.Models;
-import ru.one.hhadvisor.services.EntityManagerImpl;
-import ru.one.hhadvisor.services.VacancyParser;
-
-import javax.persistence.EntityManager;
-import javax.sql.DataSource;
 import java.io.IOException;
 
 @SpringBootApplication
