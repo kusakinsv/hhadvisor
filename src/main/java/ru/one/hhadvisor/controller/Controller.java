@@ -40,6 +40,7 @@ public class Controller {
     public ResponseEntity searchParams(@RequestParam(value = "name", required = false) String name,
                                    @RequestParam(value = "area", required = false) String area
     ) throws SQLException, InterruptedException {
+        VacancyParser.unionvaclist.clear();
         VacancyParser parser = new VacancyParser();
         MinMaxStat stat = new MinMaxStat();
         boolean b;
