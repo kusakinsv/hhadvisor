@@ -19,7 +19,7 @@ public class TableCleaner {
         Statement stmt = conn.createStatement();
         String query = "Truncate table " + tableName;
         stmt.execute(query);
-        System.out.println("Truncated Complete");
+        System.out.println("Truncation completed");
         System.out.println();
         conn.close();
     }

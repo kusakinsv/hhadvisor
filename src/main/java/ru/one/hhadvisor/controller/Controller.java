@@ -2,6 +2,7 @@ package ru.one.hhadvisor.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -100,6 +101,11 @@ RestTemplate restTemplatethis = new RestTemplate();
         ThreadParser.counterIDs = 1; //default = 1
 
         VacancyParser.response = restTemplatethis.getForObject("https://api.hh.ru/vacancies", Models.class);
+    }
+
+    @GetMapping(value = "test")
+    ResponseEntity<?> test() {
+        return new ResponseEntity<>(HttpStatus.valueOf(200), HttpStatus.OK);
     }
 
 }

@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 public class VacancyParser {
-    public final static int maincounter = 100;
+    public final static int maincounter = 2000;
     public static int counter = maincounter;
     public static final String mainurl = "https://api.hh.ru/vacancies";
     public static int countpages = 1; //default = 1
