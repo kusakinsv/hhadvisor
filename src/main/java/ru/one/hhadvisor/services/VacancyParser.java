@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 public class VacancyParser {
-    private static int counter = 15;
+    private static int counter = 2000;
     //    public static RestTemplate restTemplate;
     public static final String mainurl = "https://api.hh.ru/vacancies";
 
@@ -26,10 +26,6 @@ public class VacancyParser {
     public static int leftover = 0;
     public static int round = 0;
     public static Models response;
-    public static String superUrl = "https://api.hh.ru/vacancies";
-    public static String subarea = "";
-    public static String subname = "";
-    public static int subid = 0;
 
 
 
@@ -46,6 +42,14 @@ public class VacancyParser {
         vacloc1.add(v);
         if (i == VacancyParser.icount-1) doPutListVac(vacloc1);
 
+    }
+
+    public RestTemplate getRestTemplate() {
+        return restTemplate;
+    }
+
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     RestTemplate restTemplate = new RestTemplate();
@@ -89,6 +93,7 @@ public class VacancyParser {
         for (int j = 0; j <= countpages; j++) {
             url = VacancyParser.mainurl + "?per_page=" + 20 + "&page=" + VacancyParser.round + "&text=" + VacancyParser.name + "&area=" + VacancyParser.area;
             response = restTemplate.getForObject(url, Models.class);
+            //  System.out.println("FFFFFF: " + VacancyParser.response.getItems().get(0).getName())
             round = j;
             ThreadParser tp = new ThreadParser();
             tp.run();
@@ -106,7 +111,7 @@ public class VacancyParser {
         System.out.println("Search Complete");
         System.out.println("насчитал: " + ThreadParser.integercountVacancy);
         System.out.println("counterIDs: " + ThreadParser.counterIDs + "|| countProtector:" + countProtector);
-        System.out.println("Cicles: "+ pagesCount + " || Items: " + ThreadParser.getListOfVacancies().size());
+        System.out.println("Cicles: "+ pagesCount + " || Items: " );//+ ThreadParser.getListOfVacancies().size());
         //========возврат потоков на дефолтные значения - ThreadParser
         ThreadParser.threadCounter = 0;
         ThreadParser.counterIDs = 1;
@@ -169,7 +174,7 @@ public class VacancyParser {
         System.out.println("Search Complete");
         System.out.println("насчитал: " + ThreadParser.integercountVacancy);
         System.out.println("counterIDs: " + ThreadParser.counterIDs + "|| countProtector:" + countProtector);
-        System.out.println("Cicles: "+ pagesCount + " || Items: " + ThreadParser.getListOfVacancies().size());
+        System.out.println("Cicles: "+ pagesCount + " || Items: "); //+ ThreadParser.getListOfVacancies().size());
         //========возврат потоков на дефолтные значения - ThreadParser
         ThreadParser.threadCounter = 0;
         ThreadParser.counterIDs = 1;
@@ -237,7 +242,7 @@ public class VacancyParser {
         System.out.println("Search Complete");
         System.out.println("насчитал: " + ThreadParser.integercountVacancy);
         System.out.println("counterIDs: " + ThreadParser.counterIDs + "|| countProtector:" + countProtector);
-        System.out.println("Cicles: "+ pagesCount + " || Items: " + ThreadParser.getListOfVacancies().size());
+        System.out.println("Cicles: "+ pagesCount + " || Items:");// " + ThreadParser.getListOfVacancies().size());
         //========возврат потоков на дефолтные значения - ThreadParser
         ThreadParser.threadCounter = 0;
         ThreadParser.counterIDs = 1;

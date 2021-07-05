@@ -112,15 +112,17 @@ public class MinMaxStat {
         for (int i = 0; i < column6Count ; i++) {
             medianlist.add((column6l+column6r)/2);
         }
-
-        if (medianlist.size()%2 == 0){
-            int middle = medianlist.size()/2;
-          mediana = (medianlist.get(middle)+medianlist.get(middle+1))/2;
+        if (medianlist.size() == 1){
+            mediana = middleSalaruList.get(0);
         } else {
-            int middle = (medianlist.size()-1)/2+1;
-            mediana = medianlist.get(middle);
+            if (medianlist.size() % 2 == 0) {
+                int middle = medianlist.size() / 2;
+                mediana = (medianlist.get(middle) + medianlist.get(middle + 1)) / 2;
+            } else {
+                int middle = (medianlist.size() - 1) / 2 + 1;
+                mediana = medianlist.get(middle);
+            }
         }
-
 
 
         salaryFrom = salarymin;

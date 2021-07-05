@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ThreadParser extends Thread {
     //VacancyParser.restTemplate = new RestTemplate();
-    public static List<Vacancy> listOfVacancies = new ArrayList<>();
+ //   public static List<Vacancy> listOfVacancies = new ArrayList<>();
     public static int integercountVacancy = 0;
     public static int threadCounter = 0;
     public static int counterIDs = 1; //default = 1
@@ -25,8 +25,9 @@ public class ThreadParser extends Thread {
 
     @Override
     public void run() {
-        System.out.println("Начинаю поиск " + getName());
+        RestTemplate restTemplate = new RestTemplate();
 
+        System.out.println("Начинаю поиск " + getName());
         if (VacancyParser.round == VacancyParser.countpages) VacancyParser.icount = VacancyParser.leftover; // ??
         for (int i = 0; i < VacancyParser.icount; i++) {
             VacancyParser.countProtector++;
@@ -46,6 +47,7 @@ public class ThreadParser extends Thread {
                     Integer.parseInt(VacancyParser.response.getItems().get(i).getId())
 
             );
+
 
                 String queryUrl = expurl+VacancyParser.response.getItems().get(i).getId();
                  ModelForExperience responseExp = restTemplate.getForObject(queryUrl, ModelForExperience.class);
@@ -76,13 +78,13 @@ public class ThreadParser extends Thread {
         stop();
     }
 
-    public static List<Vacancy> getListOfVacancies() {
-        return listOfVacancies;
-    }
-
-    public static void setListOfVacancies(List<Vacancy> listOfVacancies) {
-        ThreadParser.listOfVacancies = listOfVacancies;
-    }
+//    public static List<Vacancy> getListOfVacancies() {
+//        return listOfVacancies;
+//    }
+//
+//    public static void setListOfVacancies(List<Vacancy> listOfVacancies) {
+//        ThreadParser.listOfVacancies = listOfVacancies;
+//    }
 
     public static int getThreadCounter() {
         return threadCounter;

@@ -4,9 +4,12 @@ package ru.one.hhadvisor.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import ru.one.hhadvisor.entity.repos.VacancyRepo;
 import ru.one.hhadvisor.output.Vacancy;
+import ru.one.hhadvisor.program.model.Models;
 import ru.one.hhadvisor.program.statistics.MinMaxStat;
+import ru.one.hhadvisor.program.threads.ThreadParser;
 import ru.one.hhadvisor.services.VacancyParser;
 
 import java.sql.SQLException;
@@ -25,7 +28,7 @@ public class Controller {
 //    private final String hhurl = "https://api.hh.ru/vacancies";
 //    private final String page1 = "&per_page=20";
 //    private final String perpage1 = "&page=1";
-
+RestTemplate restTemplatethis = new RestTemplate();
  private final VacancyParser vacancyParser;
 
     @Autowired
@@ -40,7 +43,7 @@ public class Controller {
     public ResponseEntity searchParams(@RequestParam(value = "name", required = false) String name,
                                    @RequestParam(value = "area", required = false) String area
     ) throws SQLException, InterruptedException {
-        VacancyParser.unionvaclist.clear();
+        restoreDefaults();
         VacancyParser parser = new VacancyParser();
         MinMaxStat stat = new MinMaxStat();
         boolean b;
@@ -51,27 +54,27 @@ public class Controller {
             }});
         } else if (area == null) {
             List<Vacancy> vacancies = parser.doParseWithName(name);
-
             System.out.println("DB write operations....");
-            stat.doStat(vacancies);
             vacancyRepo.saveAll(vacancies);
             System.out.println("DB operations complete");
+            if (vacancies.size()> 1 ) stat.doStat(vacancies);
             return ResponseEntity.ok(stat);
         } else if (name == null) {
             List<Vacancy> vacancies = parser.doParseWithArea(area);
-            stat.doStat(vacancies);
             System.out.println("DB write operations....");
             vacancyRepo.saveAll(vacancies);
             System.out.println("DB operations complete");
+            if (vacancies.size()> 1 ) stat.doStat(vacancies);
             return ResponseEntity.ok(stat);
         } else {
             List<Vacancy> vacancies = parser.doParseWithAreas(name, area);
-            stat.doStat(vacancies);
+
             System.out.println("DB write operations....");
             vacancyRepo.saveAll(vacancies);
             //DBWriter.toWrite(vacancies);
             //System.out.println("TOTAL " + ThreadSaver.vacancyListFoeDBSaver.size());
             System.out.println("DB operations complete");
+            if (vacancies.size()> 1 ) stat.doStat(vacancies);
             return ResponseEntity.ok(stat);
            }
     }
@@ -83,6 +86,20 @@ public class Controller {
                 .stream(vacancyRepo.findAll().spliterator(), false)
                 .collect(Collectors.toList());
     }
+    public void restoreDefaults(){
+
+        VacancyParser.unionvaclist.clear();
+        VacancyParser.countpages = 1; //возвращаем значение общей переменной
+        VacancyParser.icount = 20;
+        VacancyParser.countProtector = 1;
+        VacancyParser.leftover = 0;
+        VacancyParser.round = 0;
+        ThreadParser.integercountVacancy = 0;
+        ThreadParser.threadCounter = 0;
+        ThreadParser.counterIDs = 1; //default = 1
+        VacancyParser.response = restTemplatethis.getForObject("https://api.hh.ru/vacancies", Models.class);
+    }
+
 }
 
 
