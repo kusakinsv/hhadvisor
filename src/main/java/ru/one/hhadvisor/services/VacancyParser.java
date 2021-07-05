@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 public class VacancyParser {
-    public final static int maincounter = 20;
+    public final static int maincounter = 100;
     public static int counter = maincounter;
     public static final String mainurl = "https://api.hh.ru/vacancies";
     public static int countpages = 1; //default = 1
@@ -154,7 +154,7 @@ public class VacancyParser {
             tp.run();
             pagesCount = j+1;
         }
-//        while(ThreadParser.threadCounter !=countpages+1 && foundItems != 0){
+//        while(ThreadParser.threadCounter !=countpages+1 && foundItems != 0){//=========Упразднено
 //            Thread.sleep(100);
 //
 //            System.out.println("счетчик потоков = " + ThreadParser.threadCounter);
@@ -220,7 +220,7 @@ public class VacancyParser {
             pagesCount = j+1;
 
         }
-//        while(ThreadParser.threadCounter !=countpages+1 && foundItems != 0){
+//        while(ThreadParser.threadCounter !=countpages+1 && foundItems != 0){//=========Упразднено
 //            Thread.sleep(100);
 //            System.out.println("счетчик потоков = " + ThreadParser.threadCounter);
 //            System.out.println("стр = " + countpages);
