@@ -10,14 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ThreadParser extends Thread {
-    //VacancyParser.restTemplate = new RestTemplate();
- //   public static List<Vacancy> listOfVacancies = new ArrayList<>();
     public static int integercountVacancy = 0;
     public static int threadCounter = 0;
     public static int counterIDs = 1; //default = 1
     private int USD = 72;
     private int EUR = 86;
-    //Vacancy vacloc = new Vacancy();
     final String expurl = "https://api.hh.ru/vacancies/";
     RestTemplate restTemplate = new RestTemplate();
 
@@ -75,7 +72,6 @@ public class ThreadParser extends Thread {
 
         System.out.println("Поток " +getName()+ " завершен");
         threadCounter++;
-        stop();
     }
 
 //    public static List<Vacancy> getListOfVacancies() {
