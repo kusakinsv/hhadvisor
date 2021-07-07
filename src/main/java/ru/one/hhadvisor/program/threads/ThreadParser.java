@@ -24,7 +24,7 @@ public class ThreadParser extends Thread {
     public void run() {
         RestTemplate restTemplate = new RestTemplate();
 
-        System.out.println("Начинаю поиск " + getName());
+        System.out.println("Начинаю инициализацию суб-потоков... " + getName());
         if (VacancyParser.round == VacancyParser.countpages) VacancyParser.icount = VacancyParser.leftover; // ??
         for (int i = 0; i < VacancyParser.icount; i++) {
             VacancyParser.countProtector++;
@@ -42,7 +42,6 @@ public class ThreadParser extends Thread {
                     null,
                     Integer.parseInt(VacancyParser.response.getItems().get(i).getArea().getId()),
                     Integer.parseInt(VacancyParser.response.getItems().get(i).getId())
-
             );
 
 

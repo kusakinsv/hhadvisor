@@ -56,22 +56,23 @@ RestTemplate restTemplatethis = new RestTemplate();
         } else if (area == null) {
             List<Vacancy> vacancies = parser.doParseWithName(name);
             System.out.println("DB write operations....");
-            vacancyRepo.saveAll(vacancies);
+            vacancies.parallelStream().forEach(x -> vacancyRepo.save(x));
+            //vacancyRepo.saveAll(vacancies); старый метод
             System.out.println("DB operations complete");
             if (vacancies.size()> 1 ) stat.doStat(vacancies);
             return ResponseEntity.ok(stat);
         } else if (name == null) {
             List<Vacancy> vacancies = parser.doParseWithArea(area);
             System.out.println("DB write operations....");
-            vacancyRepo.saveAll(vacancies);
+            vacancies.parallelStream().forEach(x -> vacancyRepo.save(x));
             System.out.println("DB operations complete");
             if (vacancies.size()> 1 ) stat.doStat(vacancies);
             return ResponseEntity.ok(stat);
         } else {
             List<Vacancy> vacancies = parser.doParseWithAreas(name, area);
-
             System.out.println("DB write operations....");
-            vacancyRepo.saveAll(vacancies);
+            vacancies.parallelStream().forEach(x -> vacancyRepo.save(x));
+            //vacancyRepo.saveAll(vacancies); старый метод
             //DBWriter.toWrite(vacancies);
             //System.out.println("TOTAL " + ThreadSaver.vacancyListFoeDBSaver.size());
             System.out.println("DB operations complete");
