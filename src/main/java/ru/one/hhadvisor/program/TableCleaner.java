@@ -24,7 +24,3 @@ public class TableCleaner {
         conn.close();
     }
 }
-//
-//springdatabase.cjgtmemkygoe.us-east-2.rds.amazonaws.com/springdatabase - первая бд
-//springdatabase2.cjgtmemkygoe.us-east-2.rds.amazonaws.com/springdatabase2    - вторая бд
-// postgresql-group6.group6.svc - postgres - postgres
