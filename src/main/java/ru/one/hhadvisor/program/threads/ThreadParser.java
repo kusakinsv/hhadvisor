@@ -24,7 +24,7 @@ public class ThreadParser extends Thread {
     public void run() {
         RestTemplate restTemplate = new RestTemplate();
 
-        System.out.println("Начинаю инициализацию суб-потоков... " + getName());
+        System.out.println("Запущен поток " + getName());
         if (VacancyParser.round == VacancyParser.countpages) VacancyParser.icount = VacancyParser.leftover; // ??
         for (int i = 0; i < VacancyParser.icount; i++) {
             VacancyParser.countProtector++;

@@ -5,7 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import ru.one.hhadvisor.program.DBWriter;
+
 
 import javax.sql.DataSource;
 
@@ -15,10 +15,6 @@ import javax.sql.DataSource;
 @PropertySource("classpath:application.properties")
 @EnableJpaRepositories
 public class Configuration {
-    @Bean
-    public DBWriter writerBean(){
-        return new DBWriter();
-    }
 
 
 
