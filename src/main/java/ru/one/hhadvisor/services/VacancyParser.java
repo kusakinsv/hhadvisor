@@ -72,35 +72,45 @@ public class VacancyParser {
             } else {countpages = counter/20;}
         }
         System.out.println("Pages:" + countpages+1);//количество страниц
+        System.out.println("Количество на страницу:" + icount);//количество страниц
         System.out.println(url);
         ThreadParser.counterIDs = 1;
         int pagesCount = 0;
         countProtector = 1;
-
-
+        System.out.println();
+        List<ThreadParser> listofThreads = new ArrayList<>();
         for (int j = 0; j <= countpages; j++) {
             if (foundItems == 0) break;
-            url = VacancyParser.mainurl + "?per_page=" + 20 + "&page=" + VacancyParser.round + "&text=" + VacancyParser.name + "&area=" + VacancyParser.area;
+            url = VacancyParser.mainurl + "?per_page=" + icount + "&page=" + VacancyParser.round + "&text=" + VacancyParser.name + "&area=" + VacancyParser.area;
             response = restTemplate.getForObject(url, Models.class);
             //  System.out.println("FFFFFF: " + VacancyParser.response.getItems().get(0).getName())
             round = j;
             ThreadParser tp = new ThreadParser();
-            tp.run();
+            if (j < countpages){
+            listofThreads.add(tp);
+            tp.start();
+            } else {
+                listofThreads.add(tp);
+                tp.start();
+                for (ThreadParser x : listofThreads
+                     ) {
+                  x.join();
+                }
+            }
             pagesCount = j+1;
-//            if (counterIDs >= 2000) break;
-//            if (countProtector >= 2000) break;
-
         }
-//        while(ThreadParser.threadCounter !=countpages+1 && foundItems != 0){   //=========Упразднено
+
+//        while(){//=========Упразднено
 //            Thread.sleep(100);
 //            System.out.println("счетчик потоков = " + ThreadParser.threadCounter);
-//            System.out.println("стр = " + countpages);
+//            System.out.println("стр = " + countProtector);
+//
 //        }
 
         System.out.println("Search Complete");
         System.out.println("насчитал: " + ThreadParser.integercountVacancy);
         System.out.println("counterIDs: " + ThreadParser.counterIDs + "|| countProtector:" + countProtector);
-        System.out.println("Cicles: "+ pagesCount + " || Items: " );//+ ThreadParser.getListOfVacancies().size());
+        System.out.println("Cicles: "+ pagesCount + " || Items: " + unionvaclist.size());//+ ThreadParser.getListOfVacancies().size());
         //========возврат потоков на дефолтные значения - ThreadParser
         ThreadParser.threadCounter = 0;
         ThreadParser.counterIDs = 1;
@@ -154,9 +164,8 @@ public class VacancyParser {
             tp.run();
             pagesCount = j+1;
         }
-//        while(ThreadParser.threadCounter !=countpages+1 && foundItems != 0){//=========Упразднено
+//        while(ThreadParser.threadCounter !=countpages && foundItems != 0){//=========Упразднено
 //            Thread.sleep(100);
-//
 //            System.out.println("счетчик потоков = " + ThreadParser.threadCounter);
 //            System.out.println("стр = " + countpages);
 //

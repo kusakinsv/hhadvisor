@@ -17,60 +17,63 @@ public class ThreadParser extends Thread {
     private int EUR = 86;
     final String expurl = "https://api.hh.ru/vacancies/";
     RestTemplate restTemplate = new RestTemplate();
-
+    public List<Vacancy> localVacancyList = new ArrayList<>();
 
 
     @Override
     public void run() {
         RestTemplate restTemplate = new RestTemplate();
-
         System.out.println("Запущен поток " + getName());
-        if (VacancyParser.round == VacancyParser.countpages) VacancyParser.icount = VacancyParser.leftover; // ??
+       if (VacancyParser.round == VacancyParser.countpages) VacancyParser.icount = VacancyParser.leftover; // ??
         for (int i = 0; i < VacancyParser.icount; i++) {
+
             VacancyParser.countProtector++;
-           if (VacancyParser.response.getItems().get(i).getSalary().getFrom() == null && VacancyParser.response.getItems().get(i).getSalary().getTo() == null) continue;
-            if (!VacancyParser.response.getItems().get(i).getSalary().getCurrency().equals("RUR")) continue;
-            integercountVacancy++;
-            Vacancy localvac = new Vacancy(null, ThreadParser.counterIDs,
-                    VacancyParser.response.getItems().get(i).getName(),
-                    VacancyParser.response.getItems().get(i).getEmployer().getName(),
-                    VacancyParser.response.getItems().get(i).getArea().getName(),
-                    VacancyParser.response.getItems().get(i).getSalary().getFrom(),
-                    VacancyParser.response.getItems().get(i).getSalary().getTo(),
-                    VacancyParser.response.getItems().get(i).getSalary().getCurrency(),
-                    null,
-                    null,
-                    Integer.parseInt(VacancyParser.response.getItems().get(i).getArea().getId()),
-                    Integer.parseInt(VacancyParser.response.getItems().get(i).getId())
-            );
+           if (VacancyParser.response.getItems().get(i).getSalary().getFrom() == null && VacancyParser.response.getItems().get(i).getSalary().getTo() == null)
+           {
+               continue;
+           } else {
+               integercountVacancy++;
+              if (!VacancyParser.response.getItems().get(i).getSalary().getCurrency().equals("RUR")) continue;
+               Vacancy localvac = new Vacancy(null, ThreadParser.counterIDs,
+                       VacancyParser.response.getItems().get(i).getName(),
+                       VacancyParser.response.getItems().get(i).getEmployer().getName(),
+                       VacancyParser.response.getItems().get(i).getArea().getName(),
+                       VacancyParser.response.getItems().get(i).getSalary().getFrom(),
+                       VacancyParser.response.getItems().get(i).getSalary().getTo(),
+                       VacancyParser.response.getItems().get(i).getSalary().getCurrency(),
+                       null,
+                       null,
+                       Integer.parseInt(VacancyParser.response.getItems().get(i).getArea().getId()),
+                       Integer.parseInt(VacancyParser.response.getItems().get(i).getId())
+               );
 
 
-                String queryUrl = expurl+VacancyParser.response.getItems().get(i).getId();
-                 ModelForExperience responseExp = restTemplate.getForObject(queryUrl, ModelForExperience.class);
-            assert responseExp != null;
-            localvac.setExperienceId(responseExp.getExperience().getId());
-            localvac.setExperienceName(responseExp.getExperience().getName());
-            //======== конвертер валюты
-            if (localvac.getSalaryCurrency().equals("USD")){
-                localvac.setSalaryCurrency("RUR");
-                localvac.setSalaryFrom(localvac.getSalaryFrom()*USD);
-                localvac.setSalaryTo(localvac.getSalaryTo()*USD);
-            }
-            if (localvac.getSalaryCurrency().equals("EUR")){
-                localvac.setSalaryCurrency("RUR");
-                localvac.setSalaryFrom(localvac.getSalaryFrom()*EUR);
-                localvac.setSalaryTo(localvac.getSalaryTo()*EUR);
-            }
+               String queryUrl = expurl + VacancyParser.response.getItems().get(i).getId();
+               ModelForExperience responseExp = restTemplate.getForObject(queryUrl, ModelForExperience.class);
+               assert responseExp != null;
+               localvac.setExperienceId(responseExp.getExperience().getId());
+               localvac.setExperienceName(responseExp.getExperience().getName());
+               //======== конвертер валюты
+               if (localvac.getSalaryCurrency().equals("USD") && localvac.getSalaryCurrency() != null ) {
+                   localvac.setSalaryCurrency("RUR");
+                   localvac.setSalaryFrom(localvac.getSalaryFrom() * USD);
+                   localvac.setSalaryTo(localvac.getSalaryTo() * USD);
+               }
+               if (localvac.getSalaryCurrency().equals("EUR") && localvac.getSalaryCurrency() != null) {
+                   localvac.setSalaryCurrency("RUR");
+                   localvac.setSalaryFrom(localvac.getSalaryFrom() * EUR);
+                   localvac.setSalaryTo(localvac.getSalaryTo() * EUR);
+               }
 
 
-            VacancyParser.unionvaclist.add(localvac);
-            ThreadParser.counterIDs++;
-            if (ThreadParser.counterIDs > 2000) break;
-            if (VacancyParser.countProtector > 2000) break;
-        }
+               VacancyParser.unionvaclist.add(localvac);
+               ThreadParser.counterIDs++;
+               if (ThreadParser.counterIDs > 2000) break;
+               if (VacancyParser.countProtector > 2000) break;
+               System.out.println("Поток " + getName() + " завершен");
+               threadCounter++;
 
-        System.out.println("Поток " +getName()+ " завершен");
-        threadCounter++;
+           }
     }
 
 //    public static List<Vacancy> getListOfVacancies() {
@@ -81,11 +84,5 @@ public class ThreadParser extends Thread {
 //        ThreadParser.listOfVacancies = listOfVacancies;
 //    }
 
-    public static int getThreadCounter() {
-        return threadCounter;
-    }
-
-    public static void setThreadCounter(int threadCounter) {
-        ThreadParser.threadCounter = threadCounter;
-    }
+}
 }
