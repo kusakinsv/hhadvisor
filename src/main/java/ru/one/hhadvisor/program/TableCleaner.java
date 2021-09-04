@@ -1,17 +1,33 @@
 package ru.one.hhadvisor.program;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
+@Getter
+@Component
 public class TableCleaner {
-    public void truncate(String tableName) throws SQLException {
-        String url = "jdbc:postgresql://springdatabase.cjgtmemkygoe.us-east-2.rds.amazonaws.com/springdatabase";
+    @Value("${spring.datasource.url}")
+    private String url;
+    @Value("${spring.datasource.username}")
+    private String username;
+    @Value("${spring.datasource.password}")
+    private String password;
+    @Value("${vacancy.table.name}")
+    private String tableName;
+
+    public void truncate() throws SQLException {
         Properties props = new Properties();
-        props.setProperty("user","administrator");
-        props.setProperty("password","123450000");
+        props.setProperty("user",username);
+        props.setProperty("password", password);
         props.setProperty("ssl","false");
         Connection conn = DriverManager.getConnection(url, props);
         System.out.println("----------------");
@@ -22,5 +38,8 @@ public class TableCleaner {
         System.out.println("Truncation completed");
         System.out.println();
         conn.close();
+    }
+
+    public TableCleaner() {
     }
 }

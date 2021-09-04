@@ -1,7 +1,7 @@
-package ru.one.hhadvisor.program.modelforone;
+package ru.one.hhadvisor.program.models.modelforone;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import ru.one.hhadvisor.program.NullableExperience;
+import ru.one.hhadvisor.program.models.NullableExperience;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public class Experience {

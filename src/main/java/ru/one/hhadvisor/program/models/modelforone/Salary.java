@@ -1,7 +1,7 @@
-package ru.one.hhadvisor.program.modelforone;
+package ru.one.hhadvisor.program.models.modelforone;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import ru.one.hhadvisor.program.NullableSalary;
+import ru.one.hhadvisor.program.models.NullableSalary;
 
 
     @JsonIgnoreProperties(ignoreUnknown = true)

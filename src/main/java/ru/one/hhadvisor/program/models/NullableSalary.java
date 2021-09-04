@@ -1,6 +1,6 @@
-package ru.one.hhadvisor.program;
+package ru.one.hhadvisor.program.models;
 
-import ru.one.hhadvisor.program.model.Salary;
+import ru.one.hhadvisor.program.models.model.Salary;
 
 public class NullableSalary extends Salary {
     private Integer from = null;

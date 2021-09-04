@@ -1,6 +1,6 @@
-package ru.one.hhadvisor.program;
+package ru.one.hhadvisor.program.models;
 
-import ru.one.hhadvisor.program.exp.Experience;
+import ru.one.hhadvisor.program.models.exp.Experience;
 
 public class NullableExperience extends Experience {
     private String id = null;

@@ -1,17 +1,19 @@
-package ru.one.hhadvisor.program.model;
+package ru.one.hhadvisor.program.models.modelforone;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Area {
     private String id;
+    private String name;
 
-    public Area() {
-    }
 
     public Area(String id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public Area() {
     }
 
     public String getId() {
@@ -29,7 +31,4 @@ public class Area {
     public void setName(String name) {
         this.name = name;
     }
-
-    private String name;
-
 }

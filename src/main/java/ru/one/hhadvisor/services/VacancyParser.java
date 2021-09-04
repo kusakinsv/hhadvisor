@@ -1,19 +1,26 @@
 package ru.one.hhadvisor.services;
 
 
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.one.hhadvisor.output.Vacancy;
 import ru.one.hhadvisor.program.TableCleaner;
-import ru.one.hhadvisor.program.model.Models;
+import ru.one.hhadvisor.program.models.model.Models;
 import ru.one.hhadvisor.program.threads.ThreadParser;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+@Getter
 @Service
 public class VacancyParser {
+
+
     public final static int maincounter = 2000;
+    private int perPage = 100;
     public static int counter = maincounter;
     public static final String mainurl = "https://api.hh.ru/vacancies";
     public static int countpages = 1; //default = 1
@@ -26,6 +33,9 @@ public class VacancyParser {
     public static Models response;
     public static List<Vacancy> unionvaclist = new ArrayList<>();
     public List<Vacancy> vacloc1 = new ArrayList<>();
+
+
+
     public VacancyParser(List<Vacancy> vacloc1) {
         this.vacloc1 = vacloc1;
      }
@@ -42,6 +52,10 @@ public class VacancyParser {
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
+
+    @Autowired
+    public TableCleaner tableCleaner;
+
     RestTemplate restTemplate = new RestTemplate();
 
     public VacancyParser() {
@@ -51,8 +65,7 @@ public class VacancyParser {
         List<Vacancy> vacloc2 = new ArrayList<>();
         VacancyParser.area = area;
         VacancyParser.name = name;
-        TableCleaner tc = new TableCleaner();
-        tc.truncate("vacancy");
+        tableCleaner.truncate();
         System.out.println("Text:" + name + " || Count:" + counter + " || Area: " + area);
         if (counter > 2000) counter = 2000;
         String url = mainurl + "?per_page=" + 1 + "&page=" + 0 + "&text=" + name + "&area=" + area;
@@ -62,14 +75,14 @@ public class VacancyParser {
         if(foundItems < counter) counter = foundItems;
         List<Vacancy> parsedlist = new ArrayList<>();
         leftover = 0;
-        icount = 20;
-        if (counter <= 20) {countpages = 1;
+        icount = perPage;
+        if (counter <= perPage) {countpages = 1;
             icount = counter;}
-        if (counter > 20) {
-            if ((counter%20) !=0) {
-                leftover = counter % 20;
-                countpages = (counter - leftover) / 20;
-            } else {countpages = counter/20;}
+        if (counter > perPage) {
+            if ((counter%perPage) !=0) {
+                leftover = counter % perPage;
+                countpages = (counter - leftover) / perPage;
+            } else {countpages = counter/perPage;}
         }
         System.out.println("Pages:" + countpages+1);//количество страниц
         System.out.println("Количество на страницу:" + icount);//количество страниц
@@ -117,7 +130,7 @@ public class VacancyParser {
         ThreadParser.integercountVacancy = 0;
         //===============================================
         countpages = 1; //возвращаем значение общей переменной
-        icount = 20;
+        icount = perPage;
         countProtector = 1;
         leftover = 0;
         round = 0;
@@ -128,8 +141,7 @@ public class VacancyParser {
 
     public List<Vacancy> doParseWithArea(String area) throws InterruptedException, SQLException {
         VacancyParser.area = area;
-        TableCleaner tc = new TableCleaner();
-        tc.truncate("vacancy");
+        tableCleaner.truncate();
         System.out.println("Count:" + counter + " || Area: " + area);
         if (counter > 2000) counter = 2000;
         String url = mainurl + "?per_page=" + 1 + "&page=" + 0 + "&area=" + area;
@@ -139,14 +151,14 @@ public class VacancyParser {
         if(foundItems < counter) counter = foundItems;
         List<Vacancy> parsedlist = new ArrayList<>();
         leftover = 0;
-        icount = 20;
-        if (counter <= 20) {countpages = 1;
+        icount = perPage;
+        if (counter <= perPage) {countpages = 1;
             icount = counter;}
-        if (counter > 20) {
-            if ((counter%20) !=0) {
-                leftover = counter % 20;
-                countpages = (counter - leftover) / 20;
-            } else {countpages = counter/20;}
+        if (counter > perPage) {
+            if ((counter%perPage) !=0) {
+                leftover = counter % perPage;
+                countpages = (counter - leftover) / perPage;
+            } else {countpages = counter/perPage;}
         }
         System.out.println("Pages:" + countpages+1);//количество страниц
         System.out.println(url);
@@ -180,7 +192,7 @@ public class VacancyParser {
         ThreadParser.integercountVacancy = 0;
         //===============================================
         countpages = 1; //возвращаем значение общей переменной
-        icount = 20;
+        icount = perPage;
         countProtector = 1;
         leftover = 0;
         round = 0;
@@ -191,8 +203,7 @@ public class VacancyParser {
 
     public List<Vacancy> doParseWithName(String name) throws InterruptedException, SQLException {
         VacancyParser.name = name;
-        TableCleaner tc = new TableCleaner();
-        tc.truncate("vacancy");
+        tableCleaner.truncate();
         System.out.println("Text:" + name + " || Count:" + counter);
         if (counter > 2000) counter = 2000;
         String url = mainurl + "?per_page=" + 1 + "&page=" + 0 + "&text=" + name;
@@ -202,14 +213,14 @@ public class VacancyParser {
         if(foundItems < counter) counter = foundItems;
         List<Vacancy> parsedlist = new ArrayList<>();
         leftover = 0;
-        icount = 20;
-        if (counter <= 20) {countpages = 1;
+        icount = perPage;
+        if (counter <= perPage) {countpages = 1;
             icount = counter;}
-        if (counter > 20) {
-            if ((counter%20) !=0) {
-                leftover = counter % 20;
-                countpages = (counter - leftover) / 20;
-            } else {countpages = counter/20;}
+        if (counter > perPage) {
+            if ((counter%perPage) !=0) {
+                leftover = counter % perPage;
+                countpages = (counter - leftover) / perPage;
+            } else {countpages = counter/perPage;}
         }
         System.out.println("Pages:" + countpages+1);//количество страниц
         System.out.println(url);
@@ -245,7 +256,7 @@ public class VacancyParser {
         ThreadParser.integercountVacancy = 0;
         //===============================================
         countpages = 1; //возвращаем значение общей переменной
-        icount = 20;
+        icount = perPage;
         countProtector = 1;
         leftover = 0;
         round = 0;

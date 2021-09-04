@@ -1,13 +1,9 @@
-package ru.one.hhadvisor.program.model;
+package ru.one.hhadvisor.program.models.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import ru.one.hhadvisor.program.NullableSalary;
+import ru.one.hhadvisor.program.models.NullableSalary;
 
-
-import java.util.Collection;
-import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Items {
     @JsonProperty("id")

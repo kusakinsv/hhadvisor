@@ -1,14 +1,16 @@
 package ru.one.hhadvisor.program.threads;
 
 
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.one.hhadvisor.output.Vacancy;
-import ru.one.hhadvisor.program.exp.ModelForExperience;
+import ru.one.hhadvisor.program.models.exp.ModelForExperience;
 import ru.one.hhadvisor.services.VacancyParser;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class ThreadParser extends Thread {
     public static int integercountVacancy = 0;
     public static int threadCounter = 0;

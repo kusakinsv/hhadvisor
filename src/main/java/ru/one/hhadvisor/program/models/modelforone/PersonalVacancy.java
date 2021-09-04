@@ -1,4 +1,4 @@
-package ru.one.hhadvisor.program.modelforone;
+package ru.one.hhadvisor.program.models.modelforone;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
