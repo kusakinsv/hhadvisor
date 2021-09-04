@@ -96,18 +96,14 @@ public class Controller {
     }
 
     public void restoreDefaults() {
-
         VacancyParser.unionvaclist.clear();
         VacancyParser.countpages = 1; //возвращаем значение общей переменной
         VacancyParser.icount = vacancyParser.getPerPage();
         VacancyParser.countProtector = 1;
         VacancyParser.leftover = 0;
         VacancyParser.round = 0;
-        VacancyParser.counter = VacancyParser.maincounter;
         ThreadParser.integercountVacancy = 0;
-        ThreadParser.threadCounter = 0;
         ThreadParser.counterIDs = 1; //default = 1
-
         VacancyParser.response = restTemplatethis.getForObject("https://api.hh.ru/vacancies", Models.class);
     }
 

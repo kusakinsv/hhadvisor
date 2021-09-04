@@ -17,10 +17,6 @@ public class HhadvisorApplication  {
 		System.out.println("* Application Started *");
 		System.out.println("***********************");
 
-		TableCleaner tableCleaner = new TableCleaner();
-		TableCleaner tc = context.getBean(TableCleaner.class);
-		System.out.println(tc.getUsername());
-		System.out.println(tc.getPassword());
 	}
 }
 

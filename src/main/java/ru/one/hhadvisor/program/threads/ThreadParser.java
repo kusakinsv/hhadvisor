@@ -13,12 +13,10 @@ import java.util.List;
 @Service
 public class ThreadParser extends Thread {
     public static int integercountVacancy = 0;
-    public static int threadCounter = 0;
     public static int counterIDs = 1; //default = 1
     private int USD = 72;
     private int EUR = 86;
     final String expurl = "https://api.hh.ru/vacancies/";
-    RestTemplate restTemplate = new RestTemplate();
     public List<Vacancy> localVacancyList = new ArrayList<>();
 
 
@@ -73,18 +71,9 @@ public class ThreadParser extends Thread {
                if (ThreadParser.counterIDs > 2000) break;
                if (VacancyParser.countProtector > 2000) break;
                System.out.println("Поток " + getName() + " завершен");
-               threadCounter++;
 
            }
     }
-
-//    public static List<Vacancy> getListOfVacancies() {
-//        return listOfVacancies;
-//    }
-//
-//    public static void setListOfVacancies(List<Vacancy> listOfVacancies) {
-//        ThreadParser.listOfVacancies = listOfVacancies;
-//    }
 
 }
 }

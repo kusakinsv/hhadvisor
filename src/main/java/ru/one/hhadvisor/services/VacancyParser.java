@@ -18,10 +18,9 @@ import java.util.List;
 @Service
 public class VacancyParser {
 
-
-    public final static int maincounter = 2000;
-    private int perPage = 100;
-    public static int counter = maincounter;
+    private final int maincounter = 2000;
+    private final int perPage = 100;
+    public static int counter = 2000;
     public static final String mainurl = "https://api.hh.ru/vacancies";
     public static int countpages = 1; //default = 1
     public static String name;
@@ -125,7 +124,6 @@ public class VacancyParser {
         System.out.println("counterIDs: " + ThreadParser.counterIDs + "|| countProtector:" + countProtector);
         System.out.println("Cicles: "+ pagesCount + " || Items: " + unionvaclist.size());//+ ThreadParser.getListOfVacancies().size());
         //========возврат потоков на дефолтные значения - ThreadParser
-        ThreadParser.threadCounter = 0;
         ThreadParser.counterIDs = 1;
         ThreadParser.integercountVacancy = 0;
         //===============================================
@@ -187,7 +185,6 @@ public class VacancyParser {
         System.out.println("counterIDs: " + ThreadParser.counterIDs + "|| countProtector:" + countProtector);
         System.out.println("Cicles: "+ pagesCount + " || Items: "); //+ ThreadParser.getListOfVacancies().size());
         //========возврат потоков на дефолтные значения - ThreadParser
-        ThreadParser.threadCounter = 0;
         ThreadParser.counterIDs = 1;
         ThreadParser.integercountVacancy = 0;
         //===============================================
@@ -251,7 +248,6 @@ public class VacancyParser {
         System.out.println("counterIDs: " + ThreadParser.counterIDs + "|| countProtector:" + countProtector);
         System.out.println("Cicles: "+ pagesCount + " || Items:");// " + ThreadParser.getListOfVacancies().size());
         //========возврат потоков на дефолтные значения - ThreadParser
-        ThreadParser.threadCounter = 0;
         ThreadParser.counterIDs = 1;
         ThreadParser.integercountVacancy = 0;
         //===============================================
