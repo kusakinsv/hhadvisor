@@ -15,7 +15,10 @@ import javax.sql.DataSource;
 @EnableJpaRepositories
 public class AppConfiguration {
 
-
+@Bean
+TableCleaner tableCleaner(){
+    return new TableCleaner();
+}
 
 
 }

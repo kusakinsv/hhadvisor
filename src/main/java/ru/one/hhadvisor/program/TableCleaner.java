@@ -13,7 +13,6 @@ import java.sql.Statement;
 import java.util.Properties;
 
 @Getter
-@Component
 public class TableCleaner {
     @Value("${spring.datasource.url}")
     private String url;

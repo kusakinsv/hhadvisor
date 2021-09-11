@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import ru.one.hhadvisor.entity.repos.VacancyRepo;
 import ru.one.hhadvisor.output.Vacancy;
-import ru.one.hhadvisor.program.TableCleaner;
 import ru.one.hhadvisor.program.models.model.Models;
 import ru.one.hhadvisor.program.statistics.MinMaxStat;
-import ru.one.hhadvisor.program.threads.ThreadParser;
+import ru.one.hhadvisor.services.ThreadParser;
 import ru.one.hhadvisor.services.VacancyParser;
 
 import java.sql.SQLException;
@@ -42,9 +41,6 @@ public class Controller {
 
     @Autowired
     public VacancyRepo vacancyRepo;
-    @Autowired
-    TableCleaner tableCleaner;
-
 
     @GetMapping("search") //  Погружение в БД
     public ResponseEntity searchParams(@RequestParam(value = "name", required = false) String name,

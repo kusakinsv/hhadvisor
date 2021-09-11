@@ -1,15 +1,18 @@
-package ru.one.hhadvisor.program.threads;
+package ru.one.hhadvisor.services;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import ru.one.hhadvisor.entity.repos.VacancyRepo;
 import ru.one.hhadvisor.output.Vacancy;
 import ru.one.hhadvisor.program.models.exp.ModelForExperience;
-import ru.one.hhadvisor.services.VacancyParser;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Scope(value = "prototype")
 @Service
 public class ThreadParser extends Thread {
     public static int integercountVacancy = 0;
@@ -19,6 +22,11 @@ public class ThreadParser extends Thread {
     final String expurl = "https://api.hh.ru/vacancies/";
     public List<Vacancy> localVacancyList = new ArrayList<>();
 
+    @Autowired
+    private VacancyRepo vacancyRepo;
+
+    public ThreadParser() {
+    }
 
     @Override
     public void run() {
@@ -67,6 +75,8 @@ public class ThreadParser extends Thread {
 
 
                VacancyParser.unionvaclist.add(localvac);
+//               vacancyRepo.save(localvac);
+
                ThreadParser.counterIDs++;
                if (ThreadParser.counterIDs > 2000) break;
                if (VacancyParser.countProtector > 2000) break;

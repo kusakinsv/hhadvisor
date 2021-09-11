@@ -6,7 +6,7 @@
 //import ru.one.hhadvisor.output.Vacancy;
 //import ru.one.hhadvisor.program.TableCleaner;
 //import ru.one.hhadvisor.program.model.Models;
-//import ru.one.hhadvisor.program.threads.ThreadParser;
+//import ru.one.hhadvisor.services.ThreadParser;
 //
 //import java.sql.SQLException;
 //import java.util.ArrayList;

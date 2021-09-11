@@ -3,14 +3,12 @@ package ru.one.hhadvisor.services;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.one.hhadvisor.output.Vacancy;
 import ru.one.hhadvisor.program.TableCleaner;
 import ru.one.hhadvisor.program.models.model.Models;
-import ru.one.hhadvisor.program.threads.ThreadParser;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,12 +43,8 @@ public class VacancyParser {
         vacloc1.add(v);
         if (i == VacancyParser.icount-1) doPutListVac(vacloc1);
     }
-    public RestTemplate getRestTemplate() {
-        return restTemplate;
-    }
-    public void setRestTemplate(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
+    @Autowired
+    private ThreadParser threadParser;
 
     @Autowired
     public TableCleaner tableCleaner;
@@ -95,7 +89,6 @@ public class VacancyParser {
             if (foundItems == 0) break;
             url = VacancyParser.mainurl + "?per_page=" + icount + "&page=" + VacancyParser.round + "&text=" + VacancyParser.name + "&area=" + VacancyParser.area;
             response = restTemplate.getForObject(url, Models.class);
-            //  System.out.println("FFFFFF: " + VacancyParser.response.getItems().get(0).getName())
             round = j;
             ThreadParser tp = new ThreadParser();
             if (j < countpages){
@@ -111,13 +104,6 @@ public class VacancyParser {
             }
             pagesCount = j+1;
         }
-
-//        while(){//=========Упразднено
-//            Thread.sleep(100);
-//            System.out.println("счетчик потоков = " + ThreadParser.threadCounter);
-//            System.out.println("стр = " + countProtector);
-//
-//        }
 
         System.out.println("Search Complete");
         System.out.println("насчитал: " + ThreadParser.integercountVacancy);
@@ -265,6 +251,12 @@ public class VacancyParser {
     }
     public void setVacloc1(List<Vacancy> vacloc1) {
         this.vacloc1 = vacloc1;
+    }
+    public RestTemplate getRestTemplate() {
+        return restTemplate;
+    }
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 }
 
