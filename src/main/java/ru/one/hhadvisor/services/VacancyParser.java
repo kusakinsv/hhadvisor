@@ -11,27 +11,23 @@ import ru.one.hhadvisor.program.models.model.Models;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 @Getter
 @Service
 public class VacancyParser {
 
-    private final int maincounter = 2000;
     private final int perPage = 100;
-    public static int counter = 2000;
+    public int counter = 2000;
     public static final String mainurl = "https://api.hh.ru/vacancies";
     public static int countpages = 1; //default = 1
-    public static String name;
-    public static String area;
     public static int icount;
     public static int countProtector = 1;
     public static int leftover = 0;
     public static int round = 0;
     public static Models response;
-    public static List<Vacancy> unionvaclist = new ArrayList<>();
+    public static List<Vacancy> unionvaclist = Collections.synchronizedList(new ArrayList<>());
     public List<Vacancy> vacloc1 = new ArrayList<>();
-
-
 
     public VacancyParser(List<Vacancy> vacloc1) {
         this.vacloc1 = vacloc1;
@@ -55,9 +51,6 @@ public class VacancyParser {
     }
 
     public List<Vacancy> doParseWithAreas(String name, String area) throws SQLException, InterruptedException {
-        List<Vacancy> vacloc2 = new ArrayList<>();
-        VacancyParser.area = area;
-        VacancyParser.name = name;
         tableCleaner.truncate();
         System.out.println("Text:" + name + " || Count:" + counter + " || Area: " + area);
         if (counter > 2000) counter = 2000;
@@ -87,7 +80,7 @@ public class VacancyParser {
         List<ThreadParser> listofThreads = new ArrayList<>();
         for (int j = 0; j <= countpages; j++) {
             if (foundItems == 0) break;
-            url = VacancyParser.mainurl + "?per_page=" + icount + "&page=" + VacancyParser.round + "&text=" + VacancyParser.name + "&area=" + VacancyParser.area;
+            url = VacancyParser.mainurl + "?per_page=" + icount + "&page=" + VacancyParser.round + "&text=" + name + "&area=" + area;
             response = restTemplate.getForObject(url, Models.class);
             round = j;
             ThreadParser tp = new ThreadParser();
@@ -118,13 +111,10 @@ public class VacancyParser {
         countProtector = 1;
         leftover = 0;
         round = 0;
-        VacancyParser.area = "";
-        VacancyParser.name = "";
         return unionvaclist;
     }
 
     public List<Vacancy> doParseWithArea(String area) throws InterruptedException, SQLException {
-        VacancyParser.area = area;
         tableCleaner.truncate();
         System.out.println("Count:" + counter + " || Area: " + area);
         if (counter > 2000) counter = 2000;
@@ -153,7 +143,7 @@ public class VacancyParser {
 
         for (int j = 0; j <= countpages; j++) {
             if (foundItems == 0) break;
-            url = VacancyParser.mainurl + "?per_page=" + 20 + "&page=" + VacancyParser.round + "&area=" + VacancyParser.area;
+            url = VacancyParser.mainurl + "?per_page=" + 20 + "&page=" + VacancyParser.round + "&area=" + area;
             response = restTemplate.getForObject(url, Models.class);
             round = j;
             ThreadParser tp = new ThreadParser();
@@ -179,13 +169,10 @@ public class VacancyParser {
         countProtector = 1;
         leftover = 0;
         round = 0;
-        VacancyParser.area = "";
-        VacancyParser.name = "";
         return unionvaclist;
        }
 
     public List<Vacancy> doParseWithName(String name) throws InterruptedException, SQLException {
-        VacancyParser.name = name;
         tableCleaner.truncate();
         System.out.println("Text:" + name + " || Count:" + counter);
         if (counter > 2000) counter = 2000;
@@ -214,7 +201,7 @@ public class VacancyParser {
 
         for (int j = 0; j <= countpages; j++) {
             if (foundItems == 0) break;
-            url = VacancyParser.mainurl + "?per_page=" + 20 + "&page=" + VacancyParser.round + "&text=" + VacancyParser.name;
+            url = VacancyParser.mainurl + "?per_page=" + 20 + "&page=" + VacancyParser.round + "&text=" + name;
            // url = mainurl + "?per_page=" + 20 + "&page=" + j + "&text=" + name;
             response = restTemplate.getForObject(url, Models.class);
             round = j;
@@ -242,8 +229,6 @@ public class VacancyParser {
         countProtector = 1;
         leftover = 0;
         round = 0;
-        VacancyParser.area = "";
-        VacancyParser.name = "";
         return unionvaclist;
     }
     public List<Vacancy> getVacloc1() {
