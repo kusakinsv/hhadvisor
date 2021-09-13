@@ -4,6 +4,7 @@ import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import ru.one.hhadvisor.program.TableCleaner;
+import ru.one.hhadvisor.services.Parser;
 
 
 import javax.sql.DataSource;
@@ -19,6 +20,5 @@ public class AppConfiguration {
 TableCleaner tableCleaner(){
     return new TableCleaner();
 }
-
 
 }

@@ -10,7 +10,6 @@ import ru.one.hhadvisor.entity.repos.VacancyRepo;
 import ru.one.hhadvisor.output.Vacancy;
 import ru.one.hhadvisor.program.models.model.Models;
 import ru.one.hhadvisor.program.statistics.MinMaxStat;
-import ru.one.hhadvisor.services.ThreadParser;
 import ru.one.hhadvisor.services.VacancyParser;
 
 import java.sql.SQLException;
@@ -98,8 +97,6 @@ public class Controller {
         VacancyParser.countProtector = 1;
         VacancyParser.leftover = 0;
         VacancyParser.round = 0;
-        ThreadParser.integercountVacancy = 0;
-        ThreadParser.counterIDs = 1; //default = 1
         VacancyParser.response = restTemplatethis.getForObject("https://api.hh.ru/vacancies", Models.class);
     }
 

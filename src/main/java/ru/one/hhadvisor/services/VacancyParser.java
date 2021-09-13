@@ -39,8 +39,6 @@ public class VacancyParser {
         vacloc1.add(v);
         if (i == VacancyParser.icount-1) doPutListVac(vacloc1);
     }
-    @Autowired
-    private ThreadParser threadParser;
 
     @Autowired
     public TableCleaner tableCleaner;
@@ -70,27 +68,28 @@ public class VacancyParser {
                 countpages = (counter - leftover) / perPage;
             } else {countpages = counter/perPage;}
         }
-        System.out.println("Pages:" + countpages+1);//количество страниц
-        System.out.println("Количество на страницу:" + icount);//количество страниц
+        System.out.println("Страниц:" + countpages);//количество страниц
+        System.out.println("Количество на страницу:" + icount);//количество на страницу
         System.out.println(url);
-        ThreadParser.counterIDs = 1;
+        Parser.counterIDs = 1;
         int pagesCount = 0;
         countProtector = 1;
         System.out.println();
-        List<ThreadParser> listofThreads = new ArrayList<>();
+        List<Thread> listofThreads = new ArrayList<>();
         for (int j = 0; j <= countpages; j++) {
             if (foundItems == 0) break;
-            url = VacancyParser.mainurl + "?per_page=" + icount + "&page=" + VacancyParser.round + "&text=" + name + "&area=" + area;
+            url = VacancyParser.mainurl + "?per_page=" + icount + "&page=" + round + "&text=" + name + "&area=" + area;
             response = restTemplate.getForObject(url, Models.class);
             round = j;
-            ThreadParser tp = new ThreadParser();
+//            ThreadParser tp = new ThreadParser();
+            Thread tp = new Thread(new Parser(response, round, icount));
             if (j < countpages){
             listofThreads.add(tp);
             tp.start();
             } else {
                 listofThreads.add(tp);
                 tp.start();
-                for (ThreadParser x : listofThreads
+                for (Thread x : listofThreads
                      ) {
                   x.join();
                 }
@@ -99,12 +98,12 @@ public class VacancyParser {
         }
 
         System.out.println("Search Complete");
-        System.out.println("насчитал: " + ThreadParser.integercountVacancy);
-        System.out.println("counterIDs: " + ThreadParser.counterIDs + "|| countProtector:" + countProtector);
-        System.out.println("Cicles: "+ pagesCount + " || Items: " + unionvaclist.size());//+ ThreadParser.getListOfVacancies().size());
+        System.out.println("насчитал: " + Parser.integercountVacancy);
+        System.out.println("counterIDs: " + Parser.counterIDs + "|| countProtector:" + countProtector);
+        System.out.println("Cicles: "+ (pagesCount-1) + " || Items: " + unionvaclist.size());//+ ThreadParser.getListOfVacancies().size());
         //========возврат потоков на дефолтные значения - ThreadParser
-        ThreadParser.counterIDs = 1;
-        ThreadParser.integercountVacancy = 0;
+        Parser.counterIDs = 1;
+        Parser.integercountVacancy = 0;
         //===============================================
         countpages = 1; //возвращаем значение общей переменной
         icount = perPage;
@@ -115,120 +114,119 @@ public class VacancyParser {
     }
 
     public List<Vacancy> doParseWithArea(String area) throws InterruptedException, SQLException {
-        tableCleaner.truncate();
-        System.out.println("Count:" + counter + " || Area: " + area);
-        if (counter > 2000) counter = 2000;
-        String url = mainurl + "?per_page=" + 1 + "&page=" + 0 + "&area=" + area;
-        Models responseFound = restTemplate.getForObject(url, Models.class);
-        Integer foundItems = responseFound.getFound();
-        System.out.println("Found: " + foundItems);
-        if(foundItems < counter) counter = foundItems;
-        List<Vacancy> parsedlist = new ArrayList<>();
-        leftover = 0;
-        icount = perPage;
-        if (counter <= perPage) {countpages = 1;
-            icount = counter;}
-        if (counter > perPage) {
-            if ((counter%perPage) !=0) {
-                leftover = counter % perPage;
-                countpages = (counter - leftover) / perPage;
-            } else {countpages = counter/perPage;}
-        }
-        System.out.println("Pages:" + countpages+1);//количество страниц
-        System.out.println(url);
-        ThreadParser.counterIDs = 1;
-        int pagesCount = 0;
-        countProtector = 1;
-
-
-        for (int j = 0; j <= countpages; j++) {
-            if (foundItems == 0) break;
-            url = VacancyParser.mainurl + "?per_page=" + 20 + "&page=" + VacancyParser.round + "&area=" + area;
-            response = restTemplate.getForObject(url, Models.class);
-            round = j;
-            ThreadParser tp = new ThreadParser();
-            tp.run();
-            pagesCount = j+1;
-        }
-//        while(ThreadParser.threadCounter !=countpages && foundItems != 0){//=========Упразднено
-//            Thread.sleep(100);
-//            System.out.println("счетчик потоков = " + ThreadParser.threadCounter);
-//            System.out.println("стр = " + countpages);
-//
+//        tableCleaner.truncate();
+//        System.out.println("Count:" + counter + " || Area: " + area);
+//        if (counter > 2000) counter = 2000;
+//        String url = mainurl + "?per_page=" + 1 + "&page=" + 0 + "&area=" + area;
+//        Models responseFound = restTemplate.getForObject(url, Models.class);
+//        Integer foundItems = responseFound.getFound();
+//        System.out.println("Found: " + foundItems);
+//        if(foundItems < counter) counter = foundItems;
+//        leftover = 0;
+//        icount = perPage;
+//        if (counter <= perPage) {countpages = 1;
+//            icount = counter;}
+//        if (counter > perPage) {
+//            if ((counter%perPage) !=0) {
+//                leftover = counter % perPage;
+//                countpages = (counter - leftover) / perPage;
+//            } else {countpages = counter/perPage;}
 //        }
-        System.out.println("Search Complete");
-        System.out.println("насчитал: " + ThreadParser.integercountVacancy);
-        System.out.println("counterIDs: " + ThreadParser.counterIDs + "|| countProtector:" + countProtector);
-        System.out.println("Cicles: "+ pagesCount + " || Items: "); //+ ThreadParser.getListOfVacancies().size());
-        //========возврат потоков на дефолтные значения - ThreadParser
-        ThreadParser.counterIDs = 1;
-        ThreadParser.integercountVacancy = 0;
-        //===============================================
-        countpages = 1; //возвращаем значение общей переменной
-        icount = perPage;
-        countProtector = 1;
-        leftover = 0;
-        round = 0;
+//        System.out.println("Pages:" + countpages+1);//количество страниц
+//        System.out.println(url);
+//        ThreadParser.counterIDs = 1;
+//        int pagesCount = 0;
+//        countProtector = 1;
+//
+//
+//        for (int j = 0; j <= countpages; j++) {
+//            if (foundItems == 0) break;
+//            url = VacancyParser.mainurl + "?per_page=" + 20 + "&page=" + VacancyParser.round + "&area=" + area;
+//            response = restTemplate.getForObject(url, Models.class);
+//            round = j;
+//            ThreadParser tp = new ThreadParser();
+//            tp.run();
+//            pagesCount = j+1;
+//        }
+////        while(ThreadParser.threadCounter !=countpages && foundItems != 0){//=========Упразднено
+////            Thread.sleep(100);
+////            System.out.println("счетчик потоков = " + ThreadParser.threadCounter);
+////            System.out.println("стр = " + countpages);
+////
+////        }
+//        System.out.println("Search Complete");
+//        System.out.println("насчитал: " + ThreadParser.integercountVacancy);
+//        System.out.println("counterIDs: " + ThreadParser.counterIDs + "|| countProtector:" + countProtector);
+//        System.out.println("Cicles: "+ pagesCount + " || Items: "); //+ ThreadParser.getListOfVacancies().size());
+//        //========возврат потоков на дефолтные значения - ThreadParser
+//        ThreadParser.counterIDs = 1;
+//        ThreadParser.integercountVacancy = 0;
+//        //===============================================
+//        countpages = 1; //возвращаем значение общей переменной
+//        icount = perPage;
+//        countProtector = 1;
+//        leftover = 0;
+//        round = 0;
         return unionvaclist;
        }
 
     public List<Vacancy> doParseWithName(String name) throws InterruptedException, SQLException {
-        tableCleaner.truncate();
-        System.out.println("Text:" + name + " || Count:" + counter);
-        if (counter > 2000) counter = 2000;
-        String url = mainurl + "?per_page=" + 1 + "&page=" + 0 + "&text=" + name;
-        Models responseFound = restTemplate.getForObject(url, Models.class);
-        Integer foundItems = responseFound.getFound();
-        System.out.println("Found: " + foundItems);
-        if(foundItems < counter) counter = foundItems;
-        List<Vacancy> parsedlist = new ArrayList<>();
-        leftover = 0;
-        icount = perPage;
-        if (counter <= perPage) {countpages = 1;
-            icount = counter;}
-        if (counter > perPage) {
-            if ((counter%perPage) !=0) {
-                leftover = counter % perPage;
-                countpages = (counter - leftover) / perPage;
-            } else {countpages = counter/perPage;}
-        }
-        System.out.println("Pages:" + countpages+1);//количество страниц
-        System.out.println(url);
-        ThreadParser.counterIDs = 1;
-        int pagesCount = 0;
-        countProtector = 1;
-
-
-        for (int j = 0; j <= countpages; j++) {
-            if (foundItems == 0) break;
-            url = VacancyParser.mainurl + "?per_page=" + 20 + "&page=" + VacancyParser.round + "&text=" + name;
-           // url = mainurl + "?per_page=" + 20 + "&page=" + j + "&text=" + name;
-            response = restTemplate.getForObject(url, Models.class);
-            round = j;
-            ThreadParser tp = new ThreadParser();
-            tp.run();
-            pagesCount = j+1;
-
-        }
-//        while(ThreadParser.threadCounter !=countpages+1 && foundItems != 0){//=========Упразднено
-//            Thread.sleep(100);
-//            System.out.println("счетчик потоков = " + ThreadParser.threadCounter);
-//            System.out.println("стр = " + countpages);
+//        tableCleaner.truncate();
+//        System.out.println("Text:" + name + " || Count:" + counter);
+//        if (counter > 2000) counter = 2000;
+//        String url = mainurl + "?per_page=" + 1 + "&page=" + 0 + "&text=" + name;
+//        Models responseFound = restTemplate.getForObject(url, Models.class);
+//        Integer foundItems = responseFound.getFound();
+//        System.out.println("Found: " + foundItems);
+//        if(foundItems < counter) counter = foundItems;
+//        List<Vacancy> parsedlist = new ArrayList<>();
+//        leftover = 0;
+//        icount = perPage;
+//        if (counter <= perPage) {countpages = 1;
+//            icount = counter;}
+//        if (counter > perPage) {
+//            if ((counter%perPage) !=0) {
+//                leftover = counter % perPage;
+//                countpages = (counter - leftover) / perPage;
+//            } else {countpages = counter/perPage;}
 //        }
-
-        System.out.println("Search Complete");
-        System.out.println("насчитал: " + ThreadParser.integercountVacancy);
-        System.out.println("counterIDs: " + ThreadParser.counterIDs + "|| countProtector:" + countProtector);
-        System.out.println("Cicles: "+ pagesCount + " || Items:");// " + ThreadParser.getListOfVacancies().size());
-        //========возврат потоков на дефолтные значения - ThreadParser
-        ThreadParser.counterIDs = 1;
-        ThreadParser.integercountVacancy = 0;
-        //===============================================
-        countpages = 1; //возвращаем значение общей переменной
-        icount = perPage;
-        countProtector = 1;
-        leftover = 0;
-        round = 0;
+//        System.out.println("Pages:" + countpages+1);//количество страниц
+//        System.out.println(url);
+//        ThreadParser.counterIDs = 1;
+//        int pagesCount = 0;
+//        countProtector = 1;
+//
+//
+//        for (int j = 0; j <= countpages; j++) {
+//            if (foundItems == 0) break;
+//            url = VacancyParser.mainurl + "?per_page=" + 20 + "&page=" + VacancyParser.round + "&text=" + name;
+//           // url = mainurl + "?per_page=" + 20 + "&page=" + j + "&text=" + name;
+//            response = restTemplate.getForObject(url, Models.class);
+//            round = j;
+//            ThreadParser tp = new ThreadParser();
+//            tp.run();
+//            pagesCount = j+1;
+//
+//        }
+////        while(ThreadParser.threadCounter !=countpages+1 && foundItems != 0){//=========Упразднено
+////            Thread.sleep(100);
+////            System.out.println("счетчик потоков = " + ThreadParser.threadCounter);
+////            System.out.println("стр = " + countpages);
+////        }
+//
+//        System.out.println("Search Complete");
+//        System.out.println("насчитал: " + ThreadParser.integercountVacancy);
+//        System.out.println("counterIDs: " + ThreadParser.counterIDs + "|| countProtector:" + countProtector);
+//        System.out.println("Cicles: "+ pagesCount + " || Items:");// " + ThreadParser.getListOfVacancies().size());
+//        //========возврат потоков на дефолтные значения - ThreadParser
+//        ThreadParser.counterIDs = 1;
+//        ThreadParser.integercountVacancy = 0;
+//        //===============================================
+//        countpages = 1; //возвращаем значение общей переменной
+//        icount = perPage;
+//        countProtector = 1;
+//        leftover = 0;
+//        round = 0;
         return unionvaclist;
     }
     public List<Vacancy> getVacloc1() {
