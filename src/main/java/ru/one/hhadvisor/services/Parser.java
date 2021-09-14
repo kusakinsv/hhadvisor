@@ -13,6 +13,7 @@ import java.util.List;
 
 public class Parser implements Runnable{
     public static int integercountVacancy = 0;
+    public static int countProtector = 0;
     public static int counterIDs = 1; //default = 1
     private int USD = 72;
     private int EUR = 86;
@@ -34,9 +35,9 @@ public class Parser implements Runnable{
         Thread.sleep(200);
         RestTemplate restTemplate = new RestTemplate();
         System.out.println("Поток " + getClass().getSimpleName() + "-" + page + " запущен");
-        if (VacancyParser.round == VacancyParser.countpages) count = VacancyParser.leftover; // ??
+        if (page == VacancyParser.countpages) count = VacancyParser.leftover; // ??
         for (int i = 0; i < count; i++) {
-            VacancyParser.countProtector++;
+            Parser.countProtector++;
             if (response.getItems().get(i).getSalary().getFrom() == null && response.getItems().get(i).getSalary().getTo() == null)
             {
                 continue;
@@ -74,7 +75,7 @@ public class Parser implements Runnable{
             VacancyParser.unionvaclist.add(localvac);
             Parser.counterIDs++;
             if (Parser.counterIDs > 2000) break;
-            if (VacancyParser.countProtector > 2000) break;
+            if (countProtector == 2000) break; // не позволяет искать более 2000 вакансий
         }
     }
         System.out.println("Поток " + getClass().getSimpleName()+"-"+page + " завершен");
