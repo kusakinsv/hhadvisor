@@ -73,9 +73,6 @@ public class Controller {
             List<Vacancy> vacancies = vacancyParser.doParseWithAreas(name, area);
             System.out.println("DB write operations....");
             vacancies.parallelStream().forEach(x -> vacancyRepo.save(x));
-            //vacancyRepo.saveAll(vacancies); старый метод
-            //DBWriter.toWrite(vacancies);
-            //System.out.println("TOTAL " + ThreadSaver.vacancyListFoeDBSaver.size());
             System.out.println("DB operations complete");
             if (vacancies.size() > 1) stat.doStat(vacancies);
             return ResponseEntity.ok(stat);
@@ -93,11 +90,10 @@ public class Controller {
     public void restoreDefaults() {
         VacancyParser.unionvaclist.clear();
         VacancyParser.countpages = 1; //возвращаем значение общей переменной
-        VacancyParser.icount = vacancyParser.getPerPage();
         VacancyParser.countProtector = 1;
         VacancyParser.leftover = 0;
         VacancyParser.round = 0;
-        VacancyParser.response = restTemplatethis.getForObject("https://api.hh.ru/vacancies", Models.class);
+//        VacancyParser.response = restTemplatethis.getForObject("https://api.hh.ru/vacancies", Models.class);
     }
 
     @GetMapping(value = "test")

@@ -43,6 +43,7 @@ public class MinMaxStat {
         int salarymax = Integer.MIN_VALUE;
         ;
         for (Vacancy v : vacancyList) {
+            if (v.getSalaryFrom() == null && v.getSalaryTo() == null) continue;
             if (v.getSalaryFrom() != null) {
                 if (v.getSalaryFrom() < salarymin) {
                     salarymin = v.getSalaryFrom(); //roundThousand(v.getSalaryFrom()); //v.getSalaryFrom();

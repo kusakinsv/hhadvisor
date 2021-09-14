@@ -36,11 +36,6 @@ public class NullableSalary extends Salary {
         this.currency = currency;
     }
 
-//    public NullableSalary(Integer from, Integer to, String currency) {
-//        this.from = 0;
-//        this.to = 0;
-//        this.currency = "null";
-//    }
 //    public static Object nullableObj(Object z) {
 //        if (z == null) return new NullableSalary();
 //        else return z;	}
