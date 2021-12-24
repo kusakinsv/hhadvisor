@@ -13,8 +13,8 @@ public class Parser implements Runnable{
     public static int integercountVacancy = 0;
     public static int countProtector = 0;
     public static int counterIDs = 1; //default = 1
-    private int USD = 72;
-    private int EUR = 86;
+    private int USD = 74;
+    private int EUR = 83;
     final String expurl = "https://api.hh.ru/vacancies/";
     public List<Vacancy> localVacancyList = new ArrayList<>();
     private Models response;
@@ -36,10 +36,10 @@ public class Parser implements Runnable{
         if (page == VacancyParser.countpages-1) count = VacancyParser.leftover; // ??
         for (int i = 0; i < count; i++) {
             Parser.countProtector++;
-//            if (response.getItems().get(i).getSalary().getFrom() == null && response.getItems().get(i).getSalary().getTo() == null)
-//            {
-//                continue;
-//            } else {
+            if (response.getItems().get(i).getSalary().getFrom() == null && response.getItems().get(i).getSalary().getTo() == null)
+            {
+                continue;
+            } else {
             integercountVacancy++;
 //                if (!response.getItems().get(i).getSalary().getCurrency().equals("RUR")) continue;
             Vacancy localvac = new Vacancy(null, Parser.counterIDs,
@@ -56,26 +56,26 @@ public class Parser implements Runnable{
             );
             String queryUrl = expurl + response.getItems().get(i).getId();
             ModelForExperience responseExp = restTemplate.getForObject(queryUrl, ModelForExperience.class);
-//            assert responseExp != null;
-//            localvac.setExperienceId(responseExp.getExperience().getId());
-//            localvac.setExperienceName(responseExp.getExperience().getName());
-//            //======== конвертер валюты
-//            if (localvac.getSalaryCurrency().equals("USD") && localvac.getSalaryCurrency() != null) {
-//                localvac.setSalaryCurrency("RUR");
-//                if (localvac.getSalaryFrom()!=null) localvac.setSalaryFrom(localvac.getSalaryFrom() * USD);
-//                if (localvac.getSalaryTo() !=null) localvac.setSalaryTo(localvac.getSalaryTo() * USD);
-//            }
-//            if (localvac.getSalaryCurrency().equals("EUR") && localvac.getSalaryCurrency() != null) {
-//                localvac.setSalaryCurrency("RUR");
-//                if (localvac.getSalaryFrom()!= null) localvac.setSalaryFrom(localvac.getSalaryFrom() * EUR);
-//                if (localvac.getSalaryTo() != null) localvac.setSalaryTo(localvac.getSalaryTo() * EUR);
-//            }
+            assert responseExp != null;
+            localvac.setExperienceId(responseExp.getExperience().getId());
+            localvac.setExperienceName(responseExp.getExperience().getName());
+            //======== конвертер валюты
+            if (localvac.getSalaryCurrency().equals("USD") && localvac.getSalaryCurrency() != null) {
+                localvac.setSalaryCurrency("RUR");
+                if (localvac.getSalaryFrom()!=null) localvac.setSalaryFrom(localvac.getSalaryFrom() * USD);
+                if (localvac.getSalaryTo() !=null) localvac.setSalaryTo(localvac.getSalaryTo() * USD);
+            }
+            if (localvac.getSalaryCurrency().equals("EUR") && localvac.getSalaryCurrency() != null) {
+                localvac.setSalaryCurrency("RUR");
+                if (localvac.getSalaryFrom()!= null) localvac.setSalaryFrom(localvac.getSalaryFrom() * EUR);
+                if (localvac.getSalaryTo() != null) localvac.setSalaryTo(localvac.getSalaryTo() * EUR);
+            }
             VacancyParser.unionvaclist.add(localvac);
             Parser.counterIDs++;
             if (Parser.counterIDs > 2000) break;
             if (countProtector == 2000) break; // не позволяет искать более 2000 вакансий
         }
-//    }
+    }
         System.out.println("Поток " + Thread.currentThread().getName() + " завершен");
     }
 }

@@ -17,7 +17,8 @@ import java.util.List;
 public class VacancyParser {
 
     private final int perPage = 100;
-    public int counter = 2000;
+    public int optionCounter = 2000;
+
     public static final String mainurl = "https://api.hh.ru/vacancies";
     public static int countpages = 1; //default = 1
     public static int countProtector = 1;
@@ -34,12 +35,15 @@ public class VacancyParser {
 
 
     public void startParsing(String[] url, String foundUrl) throws SQLException, InterruptedException {
+        System.out.printf("countpages: %s\n", countpages);
         tableCleaner.truncate();
+        int counter = optionCounter;
         int foundItems = foundItems(foundUrl);
         if (counter > 2000) counter = 2000;
         if(foundItems < counter) counter = foundItems;
         leftover = 0;
         int count = perPage;
+        System.out.printf("counter: %s\n", counter);
         if (counter <= perPage) {
             countpages = 1;
             count = counter;}
@@ -91,7 +95,6 @@ public class VacancyParser {
 
 
     public List<Vacancy> doParseWithAreas(String name, String area) throws SQLException, InterruptedException {
-        System.out.println("Text:" + name + " || Count:" + counter + " || Area: " + area);
         String foundUrl = mainurl + "?per_page=" + 1 + "&page=" + 0 + "&text=" + name + "&area=" + area;
         String[] url = new String[]{mainurl + "?per_page=" + perPage + "&page=", "&text=" + name + "&area=" + area};
         startParsing(url, foundUrl);
@@ -99,7 +102,6 @@ public class VacancyParser {
     }
 
     public List<Vacancy> doParseOnlyArea(String area) throws InterruptedException, SQLException {
-        System.out.println("Count:" + counter + " || Area: " + area);
         String foundUrl = mainurl + "?per_page=" + 1 + "&page=" + 0 + "&area=" + area;
         String[] url = new String[]{mainurl + "?per_page=" + perPage + "&page=", "&area=" + area};
         startParsing(url, foundUrl);
