@@ -1,10 +1,8 @@
 package ru.one.hhadvisor.services;
 
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
-import ru.one.hhadvisor.entity.repos.VacancyRepo;
-import ru.one.hhadvisor.output.Vacancy;
+import ru.one.hhadvisor.entity.Vacancy;
 import ru.one.hhadvisor.program.models.exp.ModelForExperience;
 import ru.one.hhadvisor.program.models.model.Models;
 
@@ -34,14 +32,14 @@ public class Parser implements Runnable{
     public void run() {
         Thread.sleep(200);
         RestTemplate restTemplate = new RestTemplate();
-        System.out.println("Поток " + getClass().getSimpleName() + "-" + page + " запущен");
-        if (page == VacancyParser.countpages) count = VacancyParser.leftover; // ??
+        System.out.println("Поток " + Thread.currentThread().getName() + " запущен");
+        if (page == VacancyParser.countpages-1) count = VacancyParser.leftover; // ??
         for (int i = 0; i < count; i++) {
             Parser.countProtector++;
-            if (response.getItems().get(i).getSalary().getFrom() == null && response.getItems().get(i).getSalary().getTo() == null)
-            {
-                continue;
-            } else {
+//            if (response.getItems().get(i).getSalary().getFrom() == null && response.getItems().get(i).getSalary().getTo() == null)
+//            {
+//                continue;
+//            } else {
             integercountVacancy++;
 //                if (!response.getItems().get(i).getSalary().getCurrency().equals("RUR")) continue;
             Vacancy localvac = new Vacancy(null, Parser.counterIDs,
@@ -58,26 +56,26 @@ public class Parser implements Runnable{
             );
             String queryUrl = expurl + response.getItems().get(i).getId();
             ModelForExperience responseExp = restTemplate.getForObject(queryUrl, ModelForExperience.class);
-            assert responseExp != null;
-            localvac.setExperienceId(responseExp.getExperience().getId());
-            localvac.setExperienceName(responseExp.getExperience().getName());
-            //======== конвертер валюты
-            if (localvac.getSalaryCurrency().equals("USD") && localvac.getSalaryCurrency() != null) {
-                localvac.setSalaryCurrency("RUR");
-                localvac.setSalaryFrom(localvac.getSalaryFrom() * USD);
-                localvac.setSalaryTo(localvac.getSalaryTo() * USD);
-            }
-            if (localvac.getSalaryCurrency().equals("EUR") && localvac.getSalaryCurrency() != null) {
-                localvac.setSalaryCurrency("RUR");
-                localvac.setSalaryFrom(localvac.getSalaryFrom() * EUR);
-                localvac.setSalaryTo(localvac.getSalaryTo() * EUR);
-            }
+//            assert responseExp != null;
+//            localvac.setExperienceId(responseExp.getExperience().getId());
+//            localvac.setExperienceName(responseExp.getExperience().getName());
+//            //======== конвертер валюты
+//            if (localvac.getSalaryCurrency().equals("USD") && localvac.getSalaryCurrency() != null) {
+//                localvac.setSalaryCurrency("RUR");
+//                if (localvac.getSalaryFrom()!=null) localvac.setSalaryFrom(localvac.getSalaryFrom() * USD);
+//                if (localvac.getSalaryTo() !=null) localvac.setSalaryTo(localvac.getSalaryTo() * USD);
+//            }
+//            if (localvac.getSalaryCurrency().equals("EUR") && localvac.getSalaryCurrency() != null) {
+//                localvac.setSalaryCurrency("RUR");
+//                if (localvac.getSalaryFrom()!= null) localvac.setSalaryFrom(localvac.getSalaryFrom() * EUR);
+//                if (localvac.getSalaryTo() != null) localvac.setSalaryTo(localvac.getSalaryTo() * EUR);
+//            }
             VacancyParser.unionvaclist.add(localvac);
             Parser.counterIDs++;
             if (Parser.counterIDs > 2000) break;
             if (countProtector == 2000) break; // не позволяет искать более 2000 вакансий
         }
-    }
-        System.out.println("Поток " + getClass().getSimpleName()+"-"+page + " завершен");
+//    }
+        System.out.println("Поток " + Thread.currentThread().getName() + " завершен");
     }
 }

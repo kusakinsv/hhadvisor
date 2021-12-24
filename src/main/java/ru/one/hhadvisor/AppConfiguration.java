@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import ru.one.hhadvisor.program.TableCleaner;
 import ru.one.hhadvisor.services.Parser;
+import ru.one.hhadvisor.services.VacancyParser;
 
 
 import javax.sql.DataSource;
@@ -19,6 +20,12 @@ public class AppConfiguration {
 @Bean
 TableCleaner tableCleaner(){
     return new TableCleaner();
+}
+
+@Bean
+@Scope("prototype")
+VacancyParser vacancyParser(){
+    return new VacancyParser();
 }
 
 }

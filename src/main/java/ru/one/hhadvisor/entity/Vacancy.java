@@ -1,4 +1,4 @@
-package ru.one.hhadvisor.output;
+package ru.one.hhadvisor.entity;
 
 
 import javax.persistence.Entity;
@@ -22,7 +22,7 @@ public class Vacancy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private  Integer dbid;
+    private Integer dbid;
 
 
     public Vacancy() {
@@ -42,7 +42,6 @@ public class Vacancy {
         this.getAreaid = getAreaid;
         this.uniqueId = uniqueId;
     }
-
 
 
     public Integer getId() {

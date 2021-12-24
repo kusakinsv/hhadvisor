@@ -6,9 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import ru.one.hhadvisor.entity.repos.VacancyRepo;
-import ru.one.hhadvisor.output.Vacancy;
-import ru.one.hhadvisor.program.models.model.Models;
+import ru.one.hhadvisor.repositories.VacancyRepo;
+import ru.one.hhadvisor.entity.Vacancy;
 import ru.one.hhadvisor.program.statistics.MinMaxStat;
 import ru.one.hhadvisor.services.VacancyParser;
 
@@ -46,7 +45,6 @@ public class Controller {
                                        @RequestParam(value = "area", required = false) String area
     ) throws SQLException, InterruptedException {
         restoreDefaults();
-//        VacancyParser parser = new VacancyParser();
         MinMaxStat stat = new MinMaxStat();
         boolean b;
         if (name == null && area == null) {
@@ -55,7 +53,7 @@ public class Controller {
                 put("system", "no parameters");
             }});
         } else if (area == null) {
-            List<Vacancy> vacancies = vacancyParser.doParseWithName(name);
+            List<Vacancy> vacancies = vacancyParser.doParseOnlyName(name);
             System.out.println("DB write operations....");
             vacancies.parallelStream().forEach(x -> vacancyRepo.save(x));
             //vacancyRepo.saveAll(vacancies); старый метод
@@ -63,7 +61,7 @@ public class Controller {
             if (vacancies.size() > 1) stat.doStat(vacancies);
             return ResponseEntity.ok(stat);
         } else if (name == null) {
-            List<Vacancy> vacancies = vacancyParser.doParseWithArea(area);
+            List<Vacancy> vacancies = vacancyParser.doParseOnlyArea(area);
             System.out.println("DB write operations....");
             vacancies.parallelStream().forEach(x -> vacancyRepo.save(x));
             System.out.println("DB operations complete");
@@ -92,7 +90,6 @@ public class Controller {
         VacancyParser.countpages = 1; //возвращаем значение общей переменной
         VacancyParser.countProtector = 1;
         VacancyParser.leftover = 0;
-        VacancyParser.round = 0;
 //        VacancyParser.response = restTemplatethis.getForObject("https://api.hh.ru/vacancies", Models.class);
     }
 

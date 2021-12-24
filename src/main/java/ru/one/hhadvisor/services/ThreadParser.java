@@ -7,7 +7,7 @@
 //import org.springframework.stereotype.Service;
 //import org.springframework.web.client.RestTemplate;
 //import ru.one.hhadvisor.entity.repos.VacancyRepo;
-//import ru.one.hhadvisor.output.Vacancy;
+//import ru.one.hhadvisor.entity.Vacancy;
 //import ru.one.hhadvisor.program.models.exp.ModelForExperience;
 //
 //import java.util.ArrayList;

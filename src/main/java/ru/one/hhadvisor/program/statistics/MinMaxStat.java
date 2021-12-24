@@ -1,7 +1,7 @@
 package ru.one.hhadvisor.program.statistics;
 
 
-import ru.one.hhadvisor.output.Vacancy;
+import ru.one.hhadvisor.entity.Vacancy;
 
 import java.util.ArrayList;
 import java.util.List;
