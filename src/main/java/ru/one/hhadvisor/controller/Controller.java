@@ -20,7 +20,7 @@ import java.util.stream.StreamSupport;
 @RestController
 @RequestMapping("/")
 public class Controller {
-
+    public static boolean inProgress = false;
 
     //    private String url = "https://api.hh.ru/search";
 //    private final String testurl = "https://api.hh.ru/vacancies?per_page=4&page=22&text=Java";
@@ -44,6 +44,10 @@ public class Controller {
     public ResponseEntity searchParams(@RequestParam(value = "name", required = false) String name,
                                        @RequestParam(value = "area", required = false) String area
     ) throws SQLException, InterruptedException {
+        if (inProgress)return ResponseEntity.ok(new HashMap<String, String>() {{
+            put("system", "previous request in progress");
+        }});
+        inProgress = true;
         restoreDefaults();
         MinMaxStat stat = new MinMaxStat();
         boolean b;
@@ -73,6 +77,7 @@ public class Controller {
             vacancies.parallelStream().forEach(x -> vacancyRepo.save(x));
             System.out.println("DB operations complete");
             if (vacancies.size() > 1) stat.doStat(vacancies);
+            inProgress = false;
             return ResponseEntity.ok(stat);
         }
     }

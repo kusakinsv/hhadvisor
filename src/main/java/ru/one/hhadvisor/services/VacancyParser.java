@@ -23,6 +23,7 @@ public class VacancyParser {
     public static int countpages = 1; //default = 1
     public static int countProtector = 1;
     public static int leftover = 0;
+
     public static List<Vacancy> unionvaclist = Collections.synchronizedList(new ArrayList<>());
 
     @Autowired
