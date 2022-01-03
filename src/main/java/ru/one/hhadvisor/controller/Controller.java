@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import ru.one.hhadvisor.repositories.VacancyRepo;
 import ru.one.hhadvisor.entity.Vacancy;
 import ru.one.hhadvisor.program.statistics.MinMaxStat;
@@ -22,13 +21,6 @@ import java.util.stream.StreamSupport;
 public class Controller {
     public static boolean inProgress = false;
 
-    //    private String url = "https://api.hh.ru/search";
-//    private final String testurl = "https://api.hh.ru/vacancies?per_page=4&page=22&text=Java";
-//    private final String hhurl = "https://api.hh.ru/vacancies";
-//    private final String page1 = "&per_page=20";
-//    private final String perpage1 = "&page=1";
-    RestTemplate restTemplatethis = new RestTemplate();
-
     @Autowired
     private VacancyParser vacancyParser;
 
@@ -40,17 +32,15 @@ public class Controller {
     @Autowired
     public VacancyRepo vacancyRepo;
 
-    @GetMapping("search") //  Погружение в БД
+    @GetMapping("search")
     public ResponseEntity searchParams(@RequestParam(value = "name", required = false) String name,
                                        @RequestParam(value = "area", required = false) String area
     ) throws SQLException, InterruptedException {
-        if (inProgress)return ResponseEntity.ok(new HashMap<String, String>() {{
+        if (inProgress) return ResponseEntity.ok(new HashMap<String, String>() {{
             put("system", "previous request in progress");
         }});
         inProgress = true;
         restoreDefaults();
-        MinMaxStat stat = new MinMaxStat();
-        boolean b;
         if (name == null && area == null) {
             System.out.println("Error: no parameters");
             return ResponseEntity.ok(new HashMap<String, String>() {{
@@ -58,30 +48,26 @@ public class Controller {
             }});
         } else if (area == null) {
             List<Vacancy> vacancies = vacancyParser.doParseOnlyName(name);
-            System.out.println("DB write operations....");
-            vacancies.parallelStream().forEach(x -> vacancyRepo.save(x));
-            //vacancyRepo.saveAll(vacancies); старый метод
-            System.out.println("DB operations complete");
-            if (vacancies.size() > 1) stat.doStat(vacancies);
-            return ResponseEntity.ok(stat);
+            return ResponseEntity.ok(makeStatistics(vacancies));
         } else if (name == null) {
             List<Vacancy> vacancies = vacancyParser.doParseOnlyArea(area);
-            System.out.println("DB write operations....");
-            vacancies.parallelStream().forEach(x -> vacancyRepo.save(x));
-            System.out.println("DB operations complete");
-            if (vacancies.size() > 1) stat.doStat(vacancies);
-            return ResponseEntity.ok(stat);
+            return ResponseEntity.ok(makeStatistics(vacancies));
         } else {
             List<Vacancy> vacancies = vacancyParser.doParseWithAreas(name, area);
-            System.out.println("DB write operations....");
-            vacancies.parallelStream().forEach(x -> vacancyRepo.save(x));
-            System.out.println("DB operations complete");
-            if (vacancies.size() > 1) stat.doStat(vacancies);
-            inProgress = false;
-            return ResponseEntity.ok(stat);
+            return ResponseEntity.ok(makeStatistics(vacancies));
         }
     }
 
+    MinMaxStat makeStatistics(List<Vacancy> vacancies){
+        MinMaxStat stat = new MinMaxStat();
+        System.out.println("DB write operations....");
+        vacancies.parallelStream().forEach(x -> vacancyRepo.save(x));
+        //vacancyRepo.saveAll(vacancies); старый метод
+        System.out.println("DB operations complete");
+        if (vacancies.size() > 1) stat.doStat(vacancies);
+        inProgress = false;
+        return stat;
+    }
 
     @GetMapping("take") //================Спрятал на время теста
     public List<Vacancy> take() {
@@ -95,7 +81,6 @@ public class Controller {
         VacancyParser.countpages = 1; //возвращаем значение общей переменной
         VacancyParser.countProtector = 1;
         VacancyParser.leftover = 0;
-//        VacancyParser.response = restTemplatethis.getForObject("https://api.hh.ru/vacancies", Models.class);
     }
 
     @GetMapping(value = "test")

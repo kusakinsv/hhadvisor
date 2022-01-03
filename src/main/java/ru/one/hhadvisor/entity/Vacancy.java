@@ -21,9 +21,8 @@ public class Vacancy {
     private  Integer uniqueId;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer dbid;
-
 
     public Vacancy() {
     }

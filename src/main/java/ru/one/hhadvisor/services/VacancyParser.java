@@ -3,7 +3,6 @@ package ru.one.hhadvisor.services;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.one.hhadvisor.entity.Vacancy;
 import ru.one.hhadvisor.program.TableCleaner;
@@ -17,7 +16,7 @@ import java.util.List;
 public class VacancyParser {
 
     private final int perPage = 100;
-    public int optionCounter = 2000;
+    public int optionalCounter = 2000;
 
     public static final String mainurl = "https://api.hh.ru/vacancies";
     public static int countpages = 1; //default = 1
@@ -34,11 +33,10 @@ public class VacancyParser {
     public VacancyParser() {
     }
 
-
     public void startParsing(String[] url, String foundUrl) throws SQLException, InterruptedException {
         System.out.printf("countpages: %s\n", countpages);
         tableCleaner.truncate();
-        int counter = optionCounter;
+        int counter = optionalCounter;
         int foundItems = foundItems(foundUrl);
         if (counter > 2000) counter = 2000;
         if(foundItems < counter) counter = foundItems;
