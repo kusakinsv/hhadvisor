@@ -2,6 +2,7 @@ package ru.one.hhadvisor.services;
 
 import lombok.SneakyThrows;
 import org.springframework.web.client.RestTemplate;
+import ru.one.hhadvisor.Options;
 import ru.one.hhadvisor.entity.Vacancy;
 import ru.one.hhadvisor.program.models.exp.ModelForExperience;
 import ru.one.hhadvisor.program.models.model.Models;
@@ -13,10 +14,6 @@ public class Parser implements Runnable{
     public static int integercountVacancy = 0;
     public static int countProtector = 0;
     public static int counterIDs = 1; //default = 1
-    private int USD = 74;
-    private int EUR = 83;
-    final String expurl = "https://api.hh.ru/vacancies/";
-    public List<Vacancy> localVacancyList = new ArrayList<>();
     private Models response;
     private int page;
     private int count;
@@ -54,7 +51,7 @@ public class Parser implements Runnable{
                     Integer.parseInt(response.getItems().get(i).getArea().getId()),
                     Integer.parseInt(response.getItems().get(i).getId())
             );
-            String queryUrl = expurl + response.getItems().get(i).getId();
+            String queryUrl = Options.expurl + response.getItems().get(i).getId();
             ModelForExperience responseExp = restTemplate.getForObject(queryUrl, ModelForExperience.class);
             assert responseExp != null;
             localvac.setExperienceId(responseExp.getExperience().getId());
@@ -62,13 +59,13 @@ public class Parser implements Runnable{
             //======== конвертер валюты
             if (localvac.getSalaryCurrency().equals("USD") && localvac.getSalaryCurrency() != null) {
                 localvac.setSalaryCurrency("RUR");
-                if (localvac.getSalaryFrom()!=null) localvac.setSalaryFrom(localvac.getSalaryFrom() * USD);
-                if (localvac.getSalaryTo() !=null) localvac.setSalaryTo(localvac.getSalaryTo() * USD);
+                if (localvac.getSalaryFrom()!=null) localvac.setSalaryFrom(localvac.getSalaryFrom() * Options.USD);
+                if (localvac.getSalaryTo() !=null) localvac.setSalaryTo(localvac.getSalaryTo() * Options.USD);
             }
             if (localvac.getSalaryCurrency().equals("EUR") && localvac.getSalaryCurrency() != null) {
                 localvac.setSalaryCurrency("RUR");
-                if (localvac.getSalaryFrom()!= null) localvac.setSalaryFrom(localvac.getSalaryFrom() * EUR);
-                if (localvac.getSalaryTo() != null) localvac.setSalaryTo(localvac.getSalaryTo() * EUR);
+                if (localvac.getSalaryFrom()!= null) localvac.setSalaryFrom(localvac.getSalaryFrom() * Options.EUR);
+                if (localvac.getSalaryTo() != null) localvac.setSalaryTo(localvac.getSalaryTo() * Options.EUR);
             }
             VacancyParser.unionvaclist.add(localvac);
             Parser.counterIDs++;
