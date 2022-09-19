@@ -7,11 +7,6 @@ public class NullableSalary extends Salary {
     private Integer to = null;
     private String currency = null;
 
-//    public NullableSalary() {
-//        this.from = 0;
-//        this.to = 0;
-//        this.currency = "null";    }
-
     public Integer getFrom() {
         return from;
     }
@@ -35,9 +30,5 @@ public class NullableSalary extends Salary {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
-
-//    public static Object nullableObj(Object z) {
-//        if (z == null) return new NullableSalary();
-//        else return z;	}
 
 }

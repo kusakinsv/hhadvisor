@@ -18,7 +18,7 @@ public class VacancyParser {
     private final int perPage = 100;
     public int optionalCounter = 2000;
 
-    public static final String mainurl = "https://api.hh.ru/vacancies";
+    private static final String mainurl = "https://api.hh.ru/vacancies";
     public static int countpages = 1; //default = 1
     public static int countProtector = 1;
     public static int leftover = 0;
@@ -112,14 +112,6 @@ public class VacancyParser {
         String[] url = new String[]{mainurl + "?per_page=" + perPage + "&page=", "&text=" + name};
         startParsing(url, foundUrl);
         return unionvaclist;
-    }
-
-
-    public RestTemplate getRestTemplate() {
-        return restTemplate;
-    }
-    public void setRestTemplate(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
     }
 }
 
